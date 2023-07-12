@@ -15,4 +15,4 @@ Load the CSV
 ```{r}
 ants <- read_csv("Competition experiment data - Tidy Census.csv")
 ```
-
+Make a graph for each colony (4 graphs). Group them by date (this will sort control vs treatment... should we add a column of this to the CSV?). Make a histogram of the count (workers + soldiers + queens) of ants in each nest. For each bar, the aesthetic should display worker count on the bottom and soldier count on the top. Add a symbol for the presence of queens or brood.
