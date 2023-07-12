@@ -16,3 +16,24 @@ Load the CSV
 ants <- read_csv("Competition experiment data - Tidy Census.csv")
 ```
 Make a graph for each colony (4 graphs). Group them by date (this will sort control vs treatment... should we add a column of this to the CSV?). Make a histogram of the count (workers + soldiers + queens) of ants in each nest. For each bar, the aesthetic should display worker count on the bottom and soldier count on the top. Add a symbol for the presence of queens or brood.
+
+Let's make 399's tibble
+```{r}
+#make a tibble of the colony's nests
+pw399 <- ants %>% 
+  filter(`Colony Name` == "PW399", Nest != "dead", Nest != "outside")
+
+#add a column of the total count
+pw399 <- pw399 %>% 
+  mutate(count = Workers + Soldiers + Queen)
+```
+
+Let's graph 399. I think I need to make vectors to use a histogram.
+```{r}
+# pw399 %>% select(Workers) %>% 
+#   ggplot() + 
+#   geom_histogram(mapping = aes(x = "Nest")) +
+#   xlab("Number of Ants Per Nest")
+```
+
+
