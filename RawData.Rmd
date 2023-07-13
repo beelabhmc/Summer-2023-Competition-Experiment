@@ -8,6 +8,7 @@ output: pdf_document
 Load Packages
 ```{r}
 library(tidyverse)
+library(ggplot2)
 ```
 
 Load the CSV
@@ -28,12 +29,24 @@ pw399 <- pw399 %>%
   mutate(count = Workers + Soldiers + Queen)
 ```
 
-Let's graph 399. I think I need to make vectors to use a histogram.
+Let's graph 399. I think I need to make vectors to use a histogram. A bar plot may offer better functionality
 ```{r}
+#histogram attempt
 # pw399 %>% select(Workers) %>% 
 #   ggplot() + 
 #   geom_histogram(mapping = aes(x = "Nest")) +
 #   xlab("Number of Ants Per Nest")
+
+#bar plot attempt
+#https://statisticsglobe.com/draw-grouped-barplot-in-r
+#Grouped barplot using ggplot2
+#Should compare the two dates in pairs, once that data is collected. I do not know how to make the bars show soldier vs worker. I do not know how to make the key specify which is control and which is competitor. 
+pw399 %>% ggplot(                                      
+       aes(x = Nest,
+           y = count,
+           fill = Date)) +
+  geom_bar(stat = "identity",
+           position = "dodge")
 ```
 
 
