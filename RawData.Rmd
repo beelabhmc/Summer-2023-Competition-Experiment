@@ -25,8 +25,8 @@ pw399 <- ants %>%
   filter(`Colony Name` == "PW399", Nest != "dead", Nest != "outside")
 
 #add a column of the total count
-pw399 <- pw399 %>% 
-  mutate(count = Workers + Soldiers + Queen)
+# pw399 <- pw399 %>% 
+#   mutate(count = Workers + Soldiers + Queen)
 ```
 
 Let's graph 399. I think I need to make vectors to use a histogram. A bar plot may offer better functionality
@@ -43,8 +43,8 @@ Let's graph 399. I think I need to make vectors to use a histogram. A bar plot m
 #Should compare the two dates in pairs, once that data is collected. I do not know how to make the bars show soldier vs worker. I do not know how to make the key specify which is control and which is competitor. 
 pw399 %>% ggplot(                                      
        aes(x = Nest,
-           y = count,
-           fill = Date)) +
+           y = Count,
+           fill = Type)) +
   geom_bar(stat = "identity",
            position = "dodge")
 ```
