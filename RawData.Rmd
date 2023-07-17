@@ -65,6 +65,9 @@ pw399 %>% filter(caste %in% c("workers", "soldiers")) %>%
 
 Trying to use alpha to pair the data from https://stackoverflow.com/questions/12715635/ggplot2-bar-plot-with-both-stack-and-dodge
 ```{r}
+#vector for scale fill manual
+fills <- c("control" = "darkgoldenrod1", "treatment" = "mediumpurple")
+
 pw399 %>% filter(caste %in% c("workers", "soldiers")) %>%
   group_by(type, nest) %>% 
   mutate(cum_tot = cumsum(count)) %>% 
@@ -72,5 +75,8 @@ pw399 %>% filter(caste %in% c("workers", "soldiers")) %>%
   geom_col(data = . %>% filter( caste=="workers"), position = position_dodge(width = 0.9), alpha = 1) +
   geom_col(data = . %>% filter( caste=="soldiers"), position = position_dodge(width = 0.9), alpha = 0.4) +
   geom_tile(aes(y=NA_integer_, alpha = factor(caste))) + 
-  scale_alpha_manual(values = c(0.4,1))
+  scale_alpha_manual(values = c(0.4,1))+
+  scale_fill_manual(values = fills)+
+  xlab("Nests")+
+  ylab("Total Number of Ants")
 ```
