@@ -14,15 +14,23 @@ library(ggplot2)
 Load the CSV
 
 ```{r}
-ants <- read_csv("Competition experiment data - Tidy Census.csv")
+ants_wide <- read_csv("Competition experiment data - Tidy Census.csv")
 ```
+
+A long data set may work best for a bar plot (geom_bar)
+```{r}
+# create a dataset by making data long
+ants <- ants_wide %>% 
+  pivot_longer(c(`workers`, `soldiers`, `queen`, `winged queens`, `males`), names_to = "caste", values_to = "count")
+```
+
 Make a graph for each colony (4 graphs). Group them by date (this will sort control vs treatment... should we add a column of this to the CSV?). Make a histogram of the count (workers + soldiers + queens) of ants in each nest. For each bar, the aesthetic should display worker count on the bottom and soldier count on the top. Add a symbol for the presence of queens or brood.
 
 Let's make 399's tibble
 ```{r}
 #make a tibble of the colony's nests
 pw399 <- ants %>% 
-  filter(`Colony Name` == "PW399", Nest != "dead", Nest != "outside")
+  filter(`colony name` == "PW399", nest != "dead", nest != "outside")
 ```
 
 Let's graph 399. I think I need to make vectors to use a histogram. A bar plot may offer better functionality
@@ -33,9 +41,9 @@ Let's graph 399. I think I need to make vectors to use a histogram. A bar plot m
 #Should compare the two dates in pairs, once that data is collected. I do not know how to make the bars show soldier vs worker. I do not know how to make the key specify which is control and which is competitor. 
 
 pw399 %>% ggplot(                                      
-       aes(x = Nest,
-           y = Count,
-           fill = Type)) +
+       aes(x = nest,
+           y = count,
+           fill = type)) +
   geom_bar(stat = "identity",
            position = "dodge")
 ```
@@ -61,13 +69,9 @@ ggplot(data, aes(fill=condition, y=value, x=specie)) +
 ```{r}
 #my attempt:
 #TODO
-# create a dataset by making data long
-#example
-table4a %>% 
-  pivot_longer(c(`1999`, `2000`), names_to = "year", values_to = "cases")
  
 # Stacked
-ggplot(data, aes(fill=caste, y=value, x=specie)) + 
+ggplot(pw399, aes(fill=caste, y=count, x=nest)) + 
     geom_bar(position="stack", stat="identity")
 ```
 
