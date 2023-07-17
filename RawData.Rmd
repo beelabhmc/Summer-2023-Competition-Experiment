@@ -23,24 +23,15 @@ Let's make 399's tibble
 #make a tibble of the colony's nests
 pw399 <- ants %>% 
   filter(`Colony Name` == "PW399", Nest != "dead", Nest != "outside")
-
-#add a column of the total count
-# pw399 <- pw399 %>% 
-#   mutate(count = Workers + Soldiers + Queen)
 ```
 
 Let's graph 399. I think I need to make vectors to use a histogram. A bar plot may offer better functionality
 ```{r}
-#histogram attempt
-# pw399 %>% select(Workers) %>% 
-#   ggplot() + 
-#   geom_histogram(mapping = aes(x = "Nest")) +
-#   xlab("Number of Ants Per Nest")
-
 #bar plot attempt
 #https://statisticsglobe.com/draw-grouped-barplot-in-r
 #Grouped barplot using ggplot2
 #Should compare the two dates in pairs, once that data is collected. I do not know how to make the bars show soldier vs worker. I do not know how to make the key specify which is control and which is competitor. 
+
 pw399 %>% ggplot(                                      
        aes(x = Nest,
            y = Count,
