@@ -19,12 +19,12 @@ ants_wide <- read_csv("Competition experiment data - Tidy Census.csv")
 
 A long data set may work best for a bar plot (geom_bar)
 ```{r}
-# create a dataset by making data long
+# create a data set by making data long
 ants <- ants_wide %>% 
   pivot_longer(c(`workers`, `soldiers`, `queen`, `winged queens`, `males`), names_to = "caste", values_to = "count")
 ```
 
-Make a graph for each colony (4 graphs). Group them by date (this will sort control vs treatment... should we add a column of this to the CSV?). Make a histogram of the count (workers + soldiers + queens) of ants in each nest. For each bar, the aesthetic should display worker count on the bottom and soldier count on the top. Add a symbol for the presence of queens or brood.
+Make a graph for each colony (4 graphs). Group them by type (control/treatment). Make a histogram of the count (workers + soldiers) of ants in each nest. For each bar, the aesthetic should display worker count on the bottom and soldier count on the top. Add a symbol for the presence of queens or brood.
 
 Let's make 399's tibble
 ```{r}
@@ -60,4 +60,17 @@ pw399 %>% filter(caste %in% c("workers", "soldiers")) %>%
   ggplot(aes(fill=caste, y=count, x=nest)) + 
     geom_bar(position="stack", stat="identity")+
   scale_fill_manual(values = fills)
+```
+
+
+Trying to use alpha to pair the data from https://stackoverflow.com/questions/12715635/ggplot2-bar-plot-with-both-stack-and-dodge
+```{r}
+pw399 %>% filter(caste %in% c("workers", "soldiers")) %>%
+  group_by(type, nest) %>% 
+  mutate(cum_tot = cumsum(count)) %>% 
+  ggplot(aes(nest, cum_tot, fill =type)) + 
+  geom_col(data = . %>% filter( caste=="workers"), position = position_dodge(width = 0.9), alpha = 1) +
+  geom_col(data = . %>% filter( caste=="soldiers"), position = position_dodge(width = 0.9), alpha = 0.4) +
+  geom_tile(aes(y=NA_integer_, alpha = factor(caste))) + 
+  scale_alpha_manual(values = c(0.4,1))
 ```
