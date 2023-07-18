@@ -79,4 +79,6 @@ pw399 %>% filter(caste %in% c("workers", "soldiers")) %>%
   scale_fill_manual(values = fills)+
   xlab("Nests")+
   ylab("Total Number of Ants")
+
+ggsave("antPractice.png", width = 7, height = 4)
 ```
