@@ -9,6 +9,7 @@ Load Packages
 ```{r}
 library(tidyverse)
 library(ggplot2)
+theme_set(theme_classic())
 ```
 
 Load the CSV
@@ -68,17 +69,17 @@ Trying to use alpha to pair the data from https://stackoverflow.com/questions/12
 #vector for scale fill manual
 fills <- c("control" = "darkgoldenrod1", "treatment" = "mediumpurple")
 
-pw399 %>% filter(caste %in% c("workers", "soldiers")) %>%
+pw399 %>% filter(caste %in% c("workers", "soldiers"), nest != "base") %>%
   group_by(type, nest) %>% 
   mutate(cum_tot = cumsum(count)) %>% 
   ggplot(aes(nest, cum_tot, fill =type)) + 
   geom_col(data = . %>% filter( caste=="workers"), position = position_dodge(width = 0.9), alpha = 1) +
   geom_col(data = . %>% filter( caste=="soldiers"), position = position_dodge(width = 0.9), alpha = 0.4) +
   geom_tile(aes(y=NA_integer_, alpha = factor(caste))) + 
-  scale_alpha_manual(values = c(0.4,1))+
+  scale_alpha_manual(values = c(0.4,1), name = "caste")+
   scale_fill_manual(values = fills)+
   xlab("Nests")+
   ylab("Total Number of Ants")
 
-ggsave("antPractice.png", width = 7, height = 4)
+ggsave("colony399.png", width = 7, height = 4)
 ```
