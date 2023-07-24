@@ -34,6 +34,116 @@ pw399 <- ants %>%
   filter(`colony name` == "PW399", nest != "dead", nest != "outside")
 ```
 
+
+399 graph:
+source: https://stackoverflow.com/questions/12715635/ggplot2-bar-plot-with-both-stack-and-dodge
+```{r}
+#vector for scale fill manual
+fills <- c("control" = "darkgoldenrod1", "treatment" = "mediumpurple")
+
+pw399 %>% filter(caste %in% c("workers", "soldiers"), nest != "base") %>%
+  group_by(type, nest) %>% 
+  mutate(cum_tot = cumsum(count)) %>% 
+  ggplot(aes(nest, cum_tot, fill =type)) + 
+  geom_col(data = . %>% filter( caste=="workers"), position = position_dodge(width = 0.9), alpha = 1) +
+  geom_col(data = . %>% filter( caste=="soldiers"), position = position_dodge(width = 0.9), alpha = 0.4) +
+  geom_tile(aes(y=NA_integer_, alpha = factor(caste))) + 
+  scale_alpha_manual(values = c(0.4,1), name = "caste")+
+  scale_fill_manual(values = fills)+
+  xlab("Nests")+
+  ylab("Total Number of Ants")
+
+ggsave("colony399.png", width = 7, height = 4)
+```
+
+Let's make 437's tibble
+```{r}
+#make a tibble of the colony's nests
+pw437 <- ants %>% 
+  filter(`colony name` == "PW437", nest != "dead", nest != "outside")
+```
+
+437 graph:
+```{r}
+#vector for scale fill manual
+fills <- c("control" = "darkgoldenrod1", "treatment" = "mediumpurple")
+
+pw437 %>% filter(caste %in% c("workers", "soldiers")) %>%
+  group_by(type, nest) %>% 
+  mutate(cum_tot = cumsum(count)) %>% 
+  ggplot(aes(nest, cum_tot, fill =forcats::fct_rev(type))) + 
+  geom_col(data = . %>% filter( caste=="workers"), position = position_dodge(width = 0.9), alpha = 1) +
+  geom_col(data = . %>% filter( caste=="soldiers"), position = position_dodge(width = 0.9), alpha = 0.4) +
+  geom_tile(aes(y=NA_integer_, alpha = factor(caste))) + 
+  scale_alpha_manual(values = c(0.4,1), name = "caste")+
+  scale_fill_manual(values = fills)+
+  ylim(0, 100)+
+  xlab("Nests")+
+  ylab("Total Number of Ants")
+
+ggsave("colony437.png", width = 7, height = 4)
+```
+
+Let's make 398's tibble
+```{r}
+#make a tibble of the colony's nests
+pw398 <- ants %>% 
+  filter(`colony name` == "PW398 (rascal)", nest != "dead", nest != "outside")
+```
+
+398 graph:
+```{r}
+#vector for scale fill manual
+fills <- c("control" = "darkgoldenrod1", "treatment" = "mediumpurple")
+
+pw398 %>% filter(caste %in% c("workers", "soldiers")) %>%
+  group_by(type, nest) %>% 
+  mutate(cum_tot = cumsum(count)) %>% 
+  ggplot(aes(nest, cum_tot, fill = type)) + 
+  geom_col(data = . %>% filter( caste=="workers"), position = position_dodge(width = 0.9), alpha = 1) +
+  geom_col(data = . %>% filter( caste=="soldiers"), position = position_dodge(width = 0.9), alpha = 0.4) +
+  geom_tile(aes(y=NA_integer_, alpha = factor(caste))) + 
+  scale_alpha_manual(values = c(0.4,1), name = "caste")+
+  scale_fill_manual(values = fills)+
+  ylim(0, 100)+
+  xlab("Nests")+
+  ylab("Total Number of Ants")
+
+ggsave("colony398.png", width = 7, height = 4)
+```
+
+
+Let's make 400's tibble
+```{r}
+#make a tibble of the colony's nests
+pw400 <- ants %>% 
+  filter(`colony name` == "PW400 (shawshank)", nest != "dead", nest != "outside")
+```
+
+437 graph:
+```{r}
+#vector for scale fill manual
+fills <- c("control" = "darkgoldenrod1", "treatment" = "mediumpurple")
+
+pw400 %>% filter(caste %in% c("workers", "soldiers")) %>%
+  group_by(type, nest) %>% 
+  mutate(cum_tot = cumsum(count)) %>% 
+  ggplot(aes(nest, cum_tot, fill =forcats::fct_rev(type))) + 
+  geom_col(data = . %>% filter( caste=="workers"), position = position_dodge(width = 0.9), alpha = 1) +
+  geom_col(data = . %>% filter( caste=="soldiers"), position = position_dodge(width = 0.9), alpha = 0.4) +
+  geom_tile(aes(y=NA_integer_, alpha = factor(caste))) + 
+  scale_alpha_manual(values = c(0.4,1), name = "caste")+
+  scale_fill_manual(values = fills)+
+  ylim(0, 100)+
+  xlab("Nests")+
+  ylab("Total Number of Ants")
+
+ggsave("colony400.png", width = 7, height = 4)
+```
+
+
+Practice runs:
+
 Let's graph 399. I think I need to make vectors to use a histogram. A bar plot may offer better functionality
 ```{r}
 #bar plot attempt
@@ -61,25 +171,4 @@ pw399 %>% filter(caste %in% c("workers", "soldiers")) %>%
   ggplot(aes(fill=caste, y=count, x=nest)) + 
     geom_bar(position="stack", stat="identity")+
   scale_fill_manual(values = fills)
-```
-
-
-Trying to use alpha to pair the data from https://stackoverflow.com/questions/12715635/ggplot2-bar-plot-with-both-stack-and-dodge
-```{r}
-#vector for scale fill manual
-fills <- c("control" = "darkgoldenrod1", "treatment" = "mediumpurple")
-
-pw399 %>% filter(caste %in% c("workers", "soldiers"), nest != "base") %>%
-  group_by(type, nest) %>% 
-  mutate(cum_tot = cumsum(count)) %>% 
-  ggplot(aes(nest, cum_tot, fill =type)) + 
-  geom_col(data = . %>% filter( caste=="workers"), position = position_dodge(width = 0.9), alpha = 1) +
-  geom_col(data = . %>% filter( caste=="soldiers"), position = position_dodge(width = 0.9), alpha = 0.4) +
-  geom_tile(aes(y=NA_integer_, alpha = factor(caste))) + 
-  scale_alpha_manual(values = c(0.4,1), name = "caste")+
-  scale_fill_manual(values = fills)+
-  xlab("Nests")+
-  ylab("Total Number of Ants")
-
-ggsave("colony399.png", width = 7, height = 4)
 ```
