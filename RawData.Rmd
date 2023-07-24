@@ -9,6 +9,7 @@ Load Packages
 ```{r}
 library(tidyverse)
 library(ggplot2)
+library(ggimage)
 theme_set(theme_classic())
 ```
 
@@ -17,6 +18,10 @@ Load the CSV
 ```{r}
 ants_wide <- read_csv("Competition experiment data - Tidy Census.csv")
 ```
+Let's add a column of the queens as a binary true/false
+```{r}
+ants_wide <- ants_wide %>% mutate(queentf = ifelse(queen>0,TRUE, FALSE))
+```
 
 A long data set may work best for a bar plot (geom_bar)
 ```{r}
@@ -24,6 +29,7 @@ A long data set may work best for a bar plot (geom_bar)
 ants <- ants_wide %>% 
   pivot_longer(c(`workers`, `soldiers`, `queen`, `winged queens`, `males`), names_to = "caste", values_to = "count")
 ```
+
 
 Make a graph for each colony (4 graphs). Group them by type (control/treatment). Make a histogram of the count (workers + soldiers) of ants in each nest. For each bar, the aesthetic should display worker count on the bottom and soldier count on the top. Add a symbol for the presence of queens or brood.
 
@@ -34,7 +40,7 @@ pw399 <- ants %>%
   filter(`colony name` == "PW399", nest != "dead", nest != "outside")
 ```
 
-
+ggplot(aes(x=nest,y=ants)) + geom_bar(stat="identity") + geom_image(aes(image=ifelse(queen,"~/Downloads/queen_crown_transparent.png", NA)), position=position_nudge(y=1))
 399 graph:
 source: https://stackoverflow.com/questions/12715635/ggplot2-bar-plot-with-both-stack-and-dodge
 ```{r}
@@ -47,6 +53,7 @@ pw399 %>% filter(caste %in% c("workers", "soldiers"), nest != "base") %>%
   ggplot(aes(nest, cum_tot, fill =type)) + 
   geom_col(data = . %>% filter( caste=="workers"), position = position_dodge(width = 0.9), alpha = 1) +
   geom_col(data = . %>% filter( caste=="soldiers"), position = position_dodge(width = 0.9), alpha = 0.4) +
+  geom_image(aes(image=ifelse(queentf,"~/Downloads/queen_crown_transparent.png", NA)), position=position_nudge(y=1))+
   geom_tile(aes(y=NA_integer_, alpha = factor(caste))) + 
   scale_alpha_manual(values = c(0.4,1), name = "caste")+
   scale_fill_manual(values = fills)+
