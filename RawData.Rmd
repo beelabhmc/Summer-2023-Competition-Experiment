@@ -53,7 +53,7 @@ pw399 %>% filter(caste %in% c("workers", "soldiers"), nest != "base") %>%
   ggplot(aes(nest, cum_tot, fill =type)) + 
   geom_col(data = . %>% filter( caste=="workers"), position = position_dodge(width = 0.9), alpha = 1) +
   geom_col(data = . %>% filter( caste=="soldiers"), position = position_dodge(width = 0.9), alpha = 0.4) +
-  geom_image(aes(image=ifelse(queentf,"~/Downloads/queen_crown_transparent.png", NA)), position=position_nudge(y=1))+
+  geom_image(aes(image=ifelse(queentf,"queen_crown_transparent.png", NA)), position=position_nudge(y=1))+
   geom_tile(aes(y=NA_integer_, alpha = factor(caste))) + 
   scale_alpha_manual(values = c(0.4,1), name = "caste")+
   scale_fill_manual(values = fills)+
