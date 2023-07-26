@@ -41,7 +41,7 @@ pw399 <- ants %>%
   filter(`colony name` == "PW399", nest != "dead", nest != "outside")
 ```
 
-ggplot(aes(x=nest,y=ants)) + geom_bar(stat="identity") + geom_image(aes(image=ifelse(queen,"~/Downloads/queen_crown_transparent.png", NA)), position=position_nudge(y=1))
+
 399 graph:
 source: https://stackoverflow.com/questions/12715635/ggplot2-bar-plot-with-both-stack-and-dodge
 ```{r}
@@ -54,17 +54,17 @@ pw399 %>% filter(caste %in% c("workers", "soldiers"), nest != "base") %>%
   ggplot(aes(nest, cum_tot, fill =type)) + 
   geom_col(data = . %>% filter( caste=="workers"), position = position_dodge(width = 0.9), alpha = 1) +
   geom_col(data = . %>% filter( caste=="soldiers"), position = position_dodge(width = 0.9), alpha = 0.4) +
-  #geom_image(aes(image=ifelse(queentf,"queen_crown_transparent.png", "black-square.jpg")), data = . %>% filter(caste %in% c("soldiers")), position = position_dodgenudge(y = 4, width = 0.9))+
-  geom_text(aes(label=ifelse(queentf,"♛", "")), data = . %>% filter(caste %in% c("soldiers")), position = position_dodgenudge(y = 14, width = 0.9), size=8)+
-  geom_text(aes(label=ifelse(broodtf,"🍼", "")), data = . %>% filter(caste %in% c("soldiers")), position = position_dodgenudge(y = 6, width = 0.9), size=6)+
+  geom_text(aes(label=ifelse(queentf,"♛", ""), color = type), data = . %>% filter(caste %in% c("soldiers")), position = position_dodgenudge(y = 14, width = 0.9), size=8)+
+  geom_text(aes(label=ifelse(broodtf,"🍼", ""), color = type), data = . %>% filter(caste %in% c("soldiers")), position = position_dodgenudge(y = 6, width = 0.9), size=6)+
   geom_tile(aes(y=NA_integer_, alpha = factor(caste))) + 
   scale_alpha_manual(values = c(0.4,1), name = "caste")+
   scale_fill_manual(values = fills)+
+  scale_color_manual(values = fills)+
+  ylim(0, 100)+
   xlab("Nests")+
   ylab("Total Number of Ants")
 
 ggsave("colony399.png", width = 7, height = 4)
-# data = . %>% filter(caste %in% c("soldiers")),
 ```
 
 Let's make 437's tibble
@@ -85,9 +85,12 @@ pw437 %>% filter(caste %in% c("workers", "soldiers")) %>%
   ggplot(aes(nest, cum_tot, fill =forcats::fct_rev(type))) + 
   geom_col(data = . %>% filter( caste=="workers"), position = position_dodge(width = 0.9), alpha = 1) +
   geom_col(data = . %>% filter( caste=="soldiers"), position = position_dodge(width = 0.9), alpha = 0.4) +
+  geom_text(aes(label=ifelse(queentf,"♛", ""), color = forcats::fct_rev(type)), data = . %>% filter(caste %in% c("soldiers")), position = position_dodgenudge(y = 14, width = 0.9), size=8)+
+  geom_text(aes(label=ifelse(broodtf,"🍼", ""), color = forcats::fct_rev(type)), data = . %>% filter(caste %in% c("soldiers")), position = position_dodgenudge(y = 6, width = 0.9), size=6)+
   geom_tile(aes(y=NA_integer_, alpha = factor(caste))) + 
   scale_alpha_manual(values = c(0.4,1), name = "caste")+
   scale_fill_manual(values = fills)+
+  scale_color_manual(values = fills)+
   ylim(0, 100)+
   xlab("Nests")+
   ylab("Total Number of Ants")
@@ -113,9 +116,12 @@ pw398 %>% filter(caste %in% c("workers", "soldiers")) %>%
   ggplot(aes(nest, cum_tot, fill = type)) + 
   geom_col(data = . %>% filter( caste=="workers"), position = position_dodge(width = 0.9), alpha = 1) +
   geom_col(data = . %>% filter( caste=="soldiers"), position = position_dodge(width = 0.9), alpha = 0.4) +
+  geom_text(aes(label=ifelse(queentf,"♛", ""), color = type), data = . %>% filter(caste %in% c("soldiers")), position = position_dodgenudge(y = 14, width = 0.9), size=8)+
+  geom_text(aes(label=ifelse(broodtf,"🍼", ""), color = type), data = . %>% filter(caste %in% c("soldiers")), position = position_dodgenudge(y = 6, width = 0.9), size=6)+
   geom_tile(aes(y=NA_integer_, alpha = factor(caste))) + 
   scale_alpha_manual(values = c(0.4,1), name = "caste")+
   scale_fill_manual(values = fills)+
+  scale_color_manual(values = fills)+
   ylim(0, 100)+
   xlab("Nests")+
   ylab("Total Number of Ants")
@@ -142,9 +148,12 @@ pw400 %>% filter(caste %in% c("workers", "soldiers")) %>%
   ggplot(aes(nest, cum_tot, fill =forcats::fct_rev(type))) + 
   geom_col(data = . %>% filter( caste=="workers"), position = position_dodge(width = 0.9), alpha = 1) +
   geom_col(data = . %>% filter( caste=="soldiers"), position = position_dodge(width = 0.9), alpha = 0.4) +
+  geom_text(aes(label=ifelse(queentf,"♛", ""), color = forcats::fct_rev(type)), data = . %>% filter(caste %in% c("soldiers")), position = position_dodgenudge(y = 14, width = 0.9), size=8)+
+  geom_text(aes(label=ifelse(broodtf,"🍼", ""), color = forcats::fct_rev(type)), data = . %>% filter(caste %in% c("soldiers")), position = position_dodgenudge(y = 6, width = 0.9), size=6)+
   geom_tile(aes(y=NA_integer_, alpha = factor(caste))) + 
   scale_alpha_manual(values = c(0.4,1), name = "caste")+
   scale_fill_manual(values = fills)+
+  scale_color_manual(values = fills)+
   ylim(0, 100)+
   xlab("Nests")+
   ylab("Total Number of Ants")
