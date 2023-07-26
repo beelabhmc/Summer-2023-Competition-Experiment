@@ -21,7 +21,7 @@ ants_wide <- read_csv("Competition experiment data - Tidy Census.csv")
 ```
 Let's add a column of the queens as a binary true/false
 ```{r}
-ants_wide <- ants_wide %>% mutate(queentf = ifelse(queen>0,TRUE, FALSE))
+ants_wide <- ants_wide %>% mutate(queentf = ifelse(queen>0,TRUE, FALSE), broodtf = ifelse(brood == "y", TRUE, FALSE))
 ```
 
 A long data set may work best for a bar plot (geom_bar)
@@ -54,7 +54,9 @@ pw399 %>% filter(caste %in% c("workers", "soldiers"), nest != "base") %>%
   ggplot(aes(nest, cum_tot, fill =type)) + 
   geom_col(data = . %>% filter( caste=="workers"), position = position_dodge(width = 0.9), alpha = 1) +
   geom_col(data = . %>% filter( caste=="soldiers"), position = position_dodge(width = 0.9), alpha = 0.4) +
-  geom_image(aes(image=ifelse(queentf,"queen_crown_transparent.png", "black-square.jpg")), data = . %>% filter(caste %in% c("soldiers")), position = position_dodgenudge(y = 4, width = 0.9))+
+  #geom_image(aes(image=ifelse(queentf,"queen_crown_transparent.png", "black-square.jpg")), data = . %>% filter(caste %in% c("soldiers")), position = position_dodgenudge(y = 4, width = 0.9))+
+  geom_text(aes(label=ifelse(queentf,"♛", "")), data = . %>% filter(caste %in% c("soldiers")), position = position_dodgenudge(y = 14, width = 0.9), size=8)+
+  geom_text(aes(label=ifelse(broodtf,"🍼", "")), data = . %>% filter(caste %in% c("soldiers")), position = position_dodgenudge(y = 6, width = 0.9), size=6)+
   geom_tile(aes(y=NA_integer_, alpha = factor(caste))) + 
   scale_alpha_manual(values = c(0.4,1), name = "caste")+
   scale_fill_manual(values = fills)+
