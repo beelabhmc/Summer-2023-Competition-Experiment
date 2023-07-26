@@ -10,6 +10,7 @@ Load Packages
 library(tidyverse)
 library(ggplot2)
 library(ggimage)
+library(ggpp)
 theme_set(theme_classic())
 ```
 
@@ -53,7 +54,7 @@ pw399 %>% filter(caste %in% c("workers", "soldiers"), nest != "base") %>%
   ggplot(aes(nest, cum_tot, fill =type)) + 
   geom_col(data = . %>% filter( caste=="workers"), position = position_dodge(width = 0.9), alpha = 1) +
   geom_col(data = . %>% filter( caste=="soldiers"), position = position_dodge(width = 0.9), alpha = 0.4) +
-  geom_image(aes(image=ifelse(queentf,"queen_crown_transparent.png", NA)), data = . %>% filter(caste %in% c("soldiers")), position = position_dodgenudge(y = 0.1, direction = "split", width = 0.75))+
+  geom_image(aes(image=ifelse(queentf,"queen_crown_transparent.png", "black-square.jpg")), data = . %>% filter(caste %in% c("soldiers")), position = position_dodgenudge(y = 4, width = 0.9))+
   geom_tile(aes(y=NA_integer_, alpha = factor(caste))) + 
   scale_alpha_manual(values = c(0.4,1), name = "caste")+
   scale_fill_manual(values = fills)+
@@ -61,6 +62,7 @@ pw399 %>% filter(caste %in% c("workers", "soldiers"), nest != "base") %>%
   ylab("Total Number of Ants")
 
 ggsave("colony399.png", width = 7, height = 4)
+# data = . %>% filter(caste %in% c("soldiers")),
 ```
 
 Let's make 437's tibble
