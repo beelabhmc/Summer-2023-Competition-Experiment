@@ -110,7 +110,7 @@ pw398 <- ants %>%
 #vector for scale fill manual
 fills <- c("control" = "darkgoldenrod1", "treatment" = "mediumpurple")
 
-pw398 %>% filter(caste %in% c("workers", "soldiers")) %>%
+pw398 %>% filter(caste %in% c("workers", "soldiers"), nest != "base") %>%
   group_by(type, nest) %>% 
   mutate(cum_tot = cumsum(count)) %>% 
   ggplot(aes(nest, cum_tot, fill = type)) + 
