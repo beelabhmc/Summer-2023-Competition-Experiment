@@ -1,0 +1,92 @@
+colony name,type,date,time,nest,workers,soldiers,brood,queen,winged queens,males
+PW395,test,7/3/2023,4:30 pm,A,48,14,y,0,0,0
+PW395,test,7/3/2023,4:30 pm,B,6,0,n,0,0,0
+PW395,test,7/3/2023,4:30 pm,C,37,3,n,0,1,0
+PW395,test,7/3/2023,4:30 pm,D,15,0,n,0,0,0
+PW395,test,7/3/2023,4:30 pm,E,51,12,y,2,0,0
+PW395,test,7/3/2023,4:30 pm,F,17,0,n,0,0,0
+PW395,test,7/3/2023,4:30 pm,G,12,1,n,0,0,0
+PW395,test,7/3/2023,4:30 pm,H,29,0,n,0,0,0
+PW395,test,7/3/2023,4:30 pm,outside,241,7,n,0,0,0
+PW398 (rascal),control,7/13/2023, 2:19 pm,A,82,0,y,1,0,0
+PW398 (rascal),control,7/13/2023, 2:19 pm,B,0,0,n,0,0,0
+PW398 (rascal),control,7/13/2023, 2:19 pm,C,1,0,n,0,0,0
+PW398 (rascal),control,7/13/2023, 2:19 pm,D,0,0,n,0,0,0
+PW398 (rascal),control,7/13/2023, 2:19 pm,dead,52,9,n,4,0,0
+PW398 (rascal),control,7/13/2023, 2:19 pm,E,65,2,y,3,0,0
+PW398 (rascal),control,7/13/2023, 2:19 pm,F,16,0,n,1,0,0
+PW398 (rascal),control,7/13/2023, 2:19 pm,G,6,0,n,0,0,0
+PW398 (rascal),control,7/13/2023, 2:19 pm,H,19,0,n,0,0,0
+PW398 (rascal),control,7/13/2023, 2:19 pm,outside,425,15,n,28,0,0
+PW398 (rascal),treatment,7/27/2023,2:45 pm,A,44,0,y,0,0,0
+PW398 (rascal),treatment,7/27/2023,2:45 pm,B,6,0,n,0,0,0
+PW398 (rascal),treatment,7/27/2023,2:45 pm,base,77,0,n,5,0,0
+PW398 (rascal),treatment,7/27/2023,2:45 pm,C,7,1,n,0,0,0
+PW398 (rascal),treatment,7/27/2023,2:45 pm,D,4,1,,0,0,0
+PW398 (rascal),treatment,7/27/2023,2:45 pm,dead,44,0,n,3,0,0
+PW398 (rascal),treatment,7/27/2023,2:45 pm,E,47,7,y,4,0,0
+PW398 (rascal),treatment,7/27/2023,2:45 pm,F,5,1,n,0,0,0
+PW398 (rascal),treatment,7/27/2023,2:45 pm,G,5,0,n,0,0,0
+PW398 (rascal),treatment,7/27/2023,2:45 pm,H,12,0,n,0,0,0
+PW398 (rascal),treatment,7/27/2023,2:45 pm,outside,347,11,n,19,0,0
+PW399,control,7/6/2023,2:40 pm,A,89,8,y,4,0,1
+PW399,control,7/6/2023,2:40 pm,B,23,1,n,0,0,0
+PW399,control,7/6/2023,2:40 pm,C,50,0,n,0,0,0
+PW399,control,7/6/2023,2:40 pm,D,7,0,n,1,0,0
+PW399,control,7/6/2023,2:40 pm,dead,36,2,n,0,0,0
+PW399,control,7/6/2023,2:40 pm,E,45,8,y,1,0,0
+PW399,control,7/6/2023,2:40 pm,F,47,1,y,0,0,0
+PW399,control,7/6/2023,2:40 pm,G,43,1,n,0,0,0
+PW399,control,7/6/2023,2:40 pm,H,97,3,y,0,0,0
+PW399,control,7/6/2023,2:40 pm,outside,258,9,n,3,0,0
+PW399,treatment,7/20/2023, 2:45 pm,A,91,1,y,0,0,0
+PW399,treatment,7/20/2023, 2:45 pm,B,5,0,n,0,0,0
+PW399,treatment,7/20/2023, 2:45 pm,base,51,4,y,1,0,0
+PW399,treatment,7/20/2023, 2:45 pm,C,18,1,n,0,0,0
+PW399,treatment,7/20/2023, 2:45 pm,D,9,0,n,0,0,0
+PW399,treatment,7/20/2023, 2:45 pm,dead,19,0,n,0,0,1
+PW399,treatment,7/20/2023, 2:45 pm,E,53,5,y,2,0,0
+PW399,treatment,7/20/2023, 2:45 pm,F,11,0,n,0,0,0
+PW399,treatment,7/20/2023, 2:45 pm,G,38,2,y,1,0,0
+PW399,treatment,7/20/2023, 2:45 pm,H,84,0,y,0,0,0
+PW399,treatment,7/20/2023, 2:45 pm,outside,287,15,n,5,0,0
+PW400,control,7/28/2023,2:45 pm,A,39,17,y,0,0,0
+PW400,control,7/28/2023,2:45 pm,B,31,1,n,0,0,0
+PW400,control,7/28/2023, 2:45 pm,C,51,5,y,0,0,0
+PW400,control,7/28/2023, 2:45 pm,D,36,4,n,0,0,0
+PW400,control,7/28/2023,2:45 pm,dead,6,0,n,0,0,0
+PW400,control,7/28/2023, 2:45 pm,E,45,10,y,1,0,0
+PW400,control,7/28/2023, 2:45 pm,F,23,2,y,0,0,0
+PW400,control,7/28/2023,2:45 pm,G,24,3,n,0,0,0
+PW400,control,7/28/2023,2:45 pm,H,30,14,y,0,0,0
+PW400,control,7/28/2023, 2:45 pm,outside,253,20,n,1,0,0
+PW400 (shawshank),treatment,7/14/2023, 2:45 pm,A,66,13,y,0,0,1
+PW400 (shawshank),treatment,7/14/2023, 2:45 pm,B,8,0,n,0,0,0
+PW400 (shawshank),treatment,7/14/2023, 2:45 pm,C,36,3,n,0,0,0
+PW400 (shawshank),treatment,7/14/2023, 2:45 pm,D,20,3,n,0,0,0
+PW400 (shawshank),treatment,7/14/2023, 2:45 pm,dead,54,4,n,0,0,0
+PW400 (shawshank),treatment,7/14/2023, 2:45 pm,E,38,8,y,0,0,0
+PW400 (shawshank),treatment,7/14/2023, 2:45 pm,F,27,1,y,0,0,0
+PW400 (shawshank),treatment,7/14/2023, 2:45 pm,G,49,14,y,1,0,0
+PW400 (shawshank),treatment,7/14/2023, 2:45 pm,H,47,14,y,1,0,0
+PW400 (shawshank),treatment,7/14/2023, 2:45 pm,outside,250,21,n,1,0,0
+PW437,treatment,7/7/2023,2:53 pm,A,30,1,y,0,0,0
+PW437,treatment,7/7/2023,2:53 pm,B,16,0,n,0,0,0
+PW437,treatment,7/7/2023,2:53 pm,C,43,2,n,0,0,0
+PW437,treatment,7/7/2023,2:53 pm,D,40,1,n,0,0,0
+PW437,treatment,7/7/2023,2:53 pm,dead,123,2,y,0,0,0
+PW437,treatment,7/7/2023,2:53 pm,E,68,13,y,0,0,0
+PW437,treatment,7/7/2023,2:53 pm,F,30,1,y,0,0,0
+PW437,treatment,7/7/2023,2:53 pm,G,61,11,y,0,0,0
+PW437,treatment,7/7/2023,2:53 pm,H,75,10,y,1,0,0
+PW437,treatment,7/7/2023,2:53 pm,outside,326,14,n,5,0,0
+PW437,control,7/21/2023,2:45 pm,A,89,3,y,0,0,0
+PW437,control,7/21/2023,2:45 pm,B,17,0,n,0,0,0
+PW437,control,7/21/2023,2:45 pm,C,69,9,y,0,0,0
+PW437,control,7/21/2023,2:45 pm,D,14,0,n,0,0,0
+PW437,control,7/21/2023,2:45 pm,dead,37,1,n,1,0,0
+PW437,control,7/21/2023,2:45 pm,E,49,20,y,1,0,0
+PW437,control,7/21/2023,2:45 pm,F,11,1,n,0,0,0
+PW437,control,7/21/2023,2:45 pm,G,25,3,n,0,0,0
+PW437,control,7/21/2023,2:45 pm,H,30,3,y,0,0,0
+PW437,control,7/21/2023,2:45 pm,outside,355,11,n,2,0,0
