@@ -11,6 +11,8 @@ library(tidyverse)
 library(ggplot2)
 library(ggimage)
 library(ggpp)
+library(glmmTMB)
+library(sjPlot)
 theme_set(theme_classic())
 ```
 
@@ -30,6 +32,10 @@ A long data set may work best for a bar plot (geom_bar)
 ants <- ants_wide %>% 
   pivot_longer(c(`workers`, `soldiers`, `queen`, `winged queens`, `males`), names_to = "caste", values_to = "count")
 ```
+
+
+
+VISUALIZATION:
 
 
 Make a graph for each colony (4 graphs). Group them by type (control/treatment). Make a histogram of the count (workers + soldiers) of ants in each nest. For each bar, the aesthetic should display worker count on the bottom and soldier count on the top. Add a symbol for the presence of queens or brood.
@@ -60,7 +66,7 @@ pw399 %>% filter(caste %in% c("workers", "soldiers"), nest != "base") %>%
   scale_alpha_manual(values = c(0.4,1), name = "caste")+
   scale_fill_manual(values = fills)+
   scale_color_manual(values = fills)+
-  ylim(0, 100)+
+  ylim(0, 120)+
   xlab("Nests")+
   ylab("Total Number of Ants")
 
@@ -91,7 +97,7 @@ pw437 %>% filter(caste %in% c("workers", "soldiers")) %>%
   scale_alpha_manual(values = c(0.4,1), name = "caste")+
   scale_fill_manual(values = fills)+
   scale_color_manual(values = fills)+
-  ylim(0, 100)+
+  ylim(0, 120)+
   xlab("Nests")+
   ylab("Total Number of Ants")
 
@@ -122,7 +128,7 @@ pw398 %>% filter(caste %in% c("workers", "soldiers"), nest != "base") %>%
   scale_alpha_manual(values = c(0.4,1), name = "caste")+
   scale_fill_manual(values = fills)+
   scale_color_manual(values = fills)+
-  ylim(0, 100)+
+  ylim(0, 120)+
   xlab("Nests")+
   ylab("Total Number of Ants")
 
@@ -154,13 +160,62 @@ pw400 %>% filter(caste %in% c("workers", "soldiers")) %>%
   scale_alpha_manual(values = c(0.4,1), name = "caste")+
   scale_fill_manual(values = fills)+
   scale_color_manual(values = fills)+
-  ylim(0, 100)+
+  ylim(0, 120)+
   xlab("Nests")+
   ylab("Total Number of Ants")
 
 ggsave("colony400.png", width = 7, height = 4)
 ```
 
+
+
+
+STATISTICAL ANALYSIS
+
+
+Next, let's create a model to look for a preference for specific nests per treatment.
+
+First, make a data frame that includes the sum of the workers and the soldiers
+```{r}
+ants_sum <- ants_wide %>% 
+  filter(type != "test", nest != "dead", nest != "outside", nest != "base") %>%
+  mutate(
+    workerSum = workers + soldiers)
+colnames(ants_sum)[1] ="colony"
+
+```
+
+
+```{r}
+model.workers.bynest <- glmmTMB(workerSum ~ nest*type + 
+                          (1|colony) -1,
+                        family="nbinom2", data = ants_sum)
+
+summary(model.workers.bynest)
+sjPlot::tab_model(model.workers.bynest)
+
+```
+What if we were to lump rows into the regions A, BCD, E, FGH?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Can ignore:
 
 Practice runs:
 
