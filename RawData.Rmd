@@ -196,9 +196,30 @@ sjPlot::tab_model(model.workers.bynest)
 
 ```
 What if we were to lump rows into the regions A, BCD, E, FGH?
+Add a column that assigns regions
+
+```{r}
+ants_region_assignment <- ants_sum %>% 
+  mutate(region = ifelse(nest == "A", "A",
+                         ifelse(nest == "B", "BCD",
+                                ifelse(nest == "C", "BCD",
+                                       ifelse(nest == "D", "BCD",
+                                              ifelse(nest == "E", "E",
+                                                     ifelse(nest == "F", "FGH",
+                                                            ifelse(nest == "G", "FGH",
+                                                                   ifelse(nest == "H", "FGH","none")))))))))
 
 
+```
 
+Now, combine rows of the same region. Source: https://www.r-bloggers.com/2022/08/combine-rows-with-same-column-values-in-r/
+```{r}
+#not what I want to do and doesn't work
+ants_by_regions <- ants_region_assignment %>%
+group_by(colony, type, region) %>% 
+  summarize(across(c(workers, soldiers, workerSum)))
+  
+```
 
 
 
