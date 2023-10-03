@@ -217,8 +217,18 @@ Now, combine rows of the same region. Source: https://www.r-bloggers.com/2022/08
 #not what I want to do and doesn't work
 ants_by_regions <- ants_region_assignment %>%
 group_by(colony, type, region) %>% 
-  summarize(across(c(workers, soldiers, workerSum)))
+  summarize(across(c(workers, soldiers, workerSum), sum))
   
+```
+
+```{r}
+model.workers.byregion <- glmmTMB(workerSum ~ region*type + 
+                          (1|colony) -1,
+                        family="nbinom2", data = ants_by_regions)
+
+summary(model.workers.byregion)
+sjPlot::tab_model(model.workers.byregion)
+
 ```
 
 
