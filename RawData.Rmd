@@ -8,6 +8,7 @@ output: pdf_document
 Load Packages
 ```{r}
 library(tidyverse)
+library(broom)
 library(ggplot2)
 library(ggimage)
 library(ggpp)
@@ -185,7 +186,18 @@ colnames(ants_sum)[1] ="colony"
 
 ```
 
+Wihtout interation: 
+```{r}
+model.workers.bynest.nointeracton <- glmmTMB(workerSum ~ nest+type + 
+                          (1|colony) -1,
+                        family="nbinom2", data = ants_sum)
 
+summary(model.workers.bynest.nointeracton)
+sjPlot::tab_model(model.workers.bynest.nointeracton)
+
+```
+
+with interaction:
 ```{r}
 model.workers.bynest <- glmmTMB(workerSum ~ nest*type + 
                           (1|colony) -1,
@@ -195,6 +207,15 @@ summary(model.workers.bynest)
 sjPlot::tab_model(model.workers.bynest)
 
 ```
+
+
+Can ANOVA give us more insight into the significance of the GLMM models (no interaction vs interaction?)?
+
+```{r}
+anova(model.workers.bynest.nointeracton,
+  model.workers.bynest)
+```
+
 What if we were to lump rows into the regions A, BCD, E, FGH?
 Add a column that assigns regions
 
