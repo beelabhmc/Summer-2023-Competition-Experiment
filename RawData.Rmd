@@ -251,6 +251,40 @@ summary(model.workers.byregion)
 sjPlot::tab_model(model.workers.byregion)
 
 ```
+GLMM on soldiers
+
+```{r}
+model.soldiers.bynest <- glmmTMB(soldiers ~ nest*type + 
+                          (1|colony) -1,
+                        family="nbinom2", data = ants_sum)
+
+summary(model.soldiers.bynest)
+sjPlot::tab_model(model.soldiers.bynest)
+
+```
+GLMM on brood
+
+```{r}
+ants_brood_binary <- ants_sum %>% 
+  filter(!is.na(brood)) %>% 
+  mutate(brood_binary = ifelse(brood == "y", 1, 0))
+```
+
+Why are there infinities?
+
+```{r}
+model.brood.bynest <- glmmTMB(brood_binary ~ nest*type + 
+                          (1|colony) -1,
+                        family="nbinom2", data = ants_brood_binary)
+
+summary(model.brood.bynest)
+sjPlot::tab_model(model.brood.bynest)
+
+```
+
+
+
+
 
 
 
