@@ -186,7 +186,7 @@ colnames(ants_sum)[1] ="colony"
 
 ```
 
-Wihtout interation: 
+Without interaction: 
 ```{r}
 model.workers.bynest.nointeracton <- glmmTMB(workerSum ~ nest+type + 
                           (1|colony) -1,
@@ -285,10 +285,27 @@ sjPlot::tab_model(model.brood.bynest)
 
 
 
+NEW QUESTION:Can we represent the number of ants in a nest as a proportion of the colony?
+
+First add in population numbers
+
+```{r}
+population <- read_csv("Competition experiment data - Population at Start Summary.csv")
+```
+merge this with ants_wide
+
+```{r}
+ants_wide <- ants_wide %>% 
+  mutate(left_join(ants_wide, population))
+```
 
 
+then, divide columns by populations.
 
-
+```{r}
+ants_wide <- ants_wide %>% 
+  mutate(ants_prop = (workers+soldiers)/pop_size)
+```
 
 
 
