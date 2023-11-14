@@ -71,7 +71,7 @@ pw399 %>% filter(caste %in% c("workers", "soldiers"), nest != "base") %>%
   xlab("Nests")+
   ylab("Total Number of Ants")
 
-ggsave("colony399.png", width = 7, height = 4)
+#ggsave("colony399.png", width = 7, height = 4)
 ```
 
 Let's make 437's tibble
@@ -102,7 +102,7 @@ pw437 %>% filter(caste %in% c("workers", "soldiers")) %>%
   xlab("Nests")+
   ylab("Total Number of Ants")
 
-ggsave("colony437.png", width = 7, height = 4)
+#ggsave("colony437.png", width = 7, height = 4)
 ```
 
 Let's make 398's tibble
@@ -133,7 +133,7 @@ pw398 %>% filter(caste %in% c("workers", "soldiers"), nest != "base") %>%
   xlab("Nests")+
   ylab("Total Number of Ants")
 
-ggsave("colony398.png", width = 7, height = 4)
+#ggsave("colony398.png", width = 7, height = 4)
 ```
 
 
@@ -165,7 +165,7 @@ pw400 %>% filter(caste %in% c("workers", "soldiers")) %>%
   xlab("Nests")+
   ylab("Total Number of Ants")
 
-ggsave("colony400.png", width = 7, height = 4)
+#ggsave("colony400.png", width = 7, height = 4)
 ```
 
 
@@ -304,8 +304,54 @@ then, divide columns by populations.
 
 ```{r}
 ants_wide <- ants_wide %>% 
-  mutate(ants_prop = (workers+soldiers)/pop_size)
+  mutate(ants_prop = (workers+soldiers)/pop_size, workers_prop = (workers)/pop_size, soldiers_prop = (soldiers)/pop_size )
 ```
+
+
+A long data set may work best for a bar plot (geom_bar)
+```{r}
+# create a data set by making data long
+ants <- ants_wide %>% 
+  pivot_longer(c(`workers`, `soldiers`, `queen`, `winged queens`, `males`, `workers_prop`, `soldiers_prop`), names_to = "caste", values_to = "count")
+```
+
+
+Let's make 399's tibble
+```{r}
+#make a tibble of the colony's nests
+pw399 <- ants %>% 
+  filter(`colony name` == "PW399", nest != "dead", nest != "outside")
+```
+
+
+399 graph:
+source: https://stackoverflow.com/questions/12715635/ggplot2-bar-plot-with-both-stack-and-dodge
+```{r}
+#vector for scale fill manual
+fills <- c("control" = "darkgoldenrod1", "treatment" = "mediumpurple")
+
+pw399 %>% filter(caste %in% c("workers_prop", "soldiers_prop"), nest != "base") %>%
+  group_by(type, nest) %>% 
+  mutate(cum_tot = cumsum(count)) %>% 
+  ggplot(aes(nest, cum_tot, fill =type)) + 
+  geom_col(data = . %>% filter( caste=="workers_prop"), position = position_dodge(width = 0.9), alpha = 1) +
+  geom_col(data = . %>% filter( caste=="soldiers_prop"), position = position_dodge(width = 0.9), alpha = 0.4) +
+  geom_text(aes(label=ifelse(queentf,"♛", ""), color = type), data = . %>% filter(caste %in% c("soldiers_prop")), position = position_dodgenudge(y = .015, width = 0.8), size=.2)+
+  geom_text(aes(label=ifelse(broodtf,"🍼", ""), color = type), data = . %>% filter(caste %in% c("soldiers_prop")), position = position_dodgenudge(y = .001, width = 0.8), size=.1)+
+  geom_tile(aes(y=NA_integer_, alpha = factor(caste))) + 
+  scale_alpha_manual(values = c(0.4,1), name = "caste")+
+  scale_fill_manual(values = fills)+
+  scale_color_manual(values = fills)+
+  ylim(0, 0.2)+
+  xlab("Nests")+
+  ylab("Proportion of Ants")
+
+ggsave("colony399.png", width = 7, height = 4)
+```
+
+
+
+
 
 
 
