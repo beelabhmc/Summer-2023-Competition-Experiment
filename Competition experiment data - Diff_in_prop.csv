@@ -1,0 +1,94 @@
+colony name,nest,type,diff_in_proportion
+PW395,A,test,NA
+PW395,B,test,NA
+PW395,C,test,NA
+PW395,D,test,NA
+PW395,E,test,NA
+PW395,F,test,NA
+PW395,G,test,NA
+PW395,H,test,NA
+PW395,outside,test,NA
+PW399,A,control,-0.059993755
+PW399,B,control,0.041014319
+PW400,base,control,-0.172955975
+PW399,C,control,0.058454882
+PW399,D,control,-0.011753424
+PW399,dead,control,0.030086087
+PW399,E,control,-0.057094429
+PW399,F,control,0.078883982
+PW399,G,control,-0.021767251
+PW399,H,control,-0.027744324
+PW399,outside,control,-0.318479861
+PW437,A,treatment,NA
+PW437,B,treatment,NA
+PW437,C,treatment,NA
+PW437,D,treatment,NA
+PW437,dead,treatment,NA
+PW437,E,treatment,NA
+PW437,F,treatment,NA
+PW437,G,treatment,NA
+PW437,H,treatment,NA
+PW437,outside,treatment,NA
+PW398 (rascal),A,control,0.115033658
+PW398 (rascal),B,control,-0.042857143
+PW398 (rascal),base,control,-0.55
+PW398 (rascal),C,control,-0.051907255
+PW398 (rascal),D,control,-0.035714286
+PW398 (rascal),dead,control,0.005086014
+PW398 (rascal),E,control,-0.034928946
+PW398 (rascal),F,control,0.040912491
+PW398 (rascal),G,control,-0.004300673
+PW398 (rascal),H,control,0.013762154
+PW398 (rascal),outside,control,-0.253477936
+PW400 (shawshank),A,treatment,NA
+PW400 (shawshank),B,treatment,NA
+PW400 (shawshank),C,treatment,NA
+PW400 (shawshank),D,treatment,NA
+PW400 (shawshank),dead,treatment,NA
+PW400 (shawshank),E,treatment,NA
+PW400 (shawshank),F,treatment,NA
+PW400 (shawshank),G,treatment,NA
+PW400 (shawshank),H,treatment,NA
+PW400 (shawshank),outside,treatment,NA
+PW399,A,treatment,NA
+PW399,B,treatment,NA
+PW399,base,treatment,NA
+PW399,C,treatment,NA
+PW399,D,treatment,NA
+PW399,dead,treatment,NA
+PW399,E,treatment,NA
+PW399,F,treatment,NA
+PW399,G,treatment,NA
+PW399,H,treatment,NA
+PW399,outside,treatment,NA
+PW437,A,control,-0.191107146
+PW437,B,control,-0.009761687
+PW437,C,control,-0.115464949
+PW437,D,control,0.061173723
+PW437,dead,control,0.200158102
+PW437,E,control,0.000326356
+PW437,F,control,0.042129005
+PW437,G,control,0.097471825
+PW437,H,control,0.115232873
+PW437,outside,control,-0.22128425
+PW398 (rascal),A,treatment,NA
+PW398 (rascal),B,treatment,NA
+PW398 (rascal),base,treatment,NA
+PW398 (rascal),C,treatment,NA
+PW398 (rascal),D,treatment,NA
+PW398 (rascal),dead,treatment,NA
+PW398 (rascal),E,treatment,NA
+PW398 (rascal),F,treatment,NA
+PW398 (rascal),G,treatment,NA
+PW398 (rascal),H,treatment,NA
+PW398 (rascal),outside,treatment,NA
+PW400 (shawshank),A,control,-0.060501527
+PW400 (shawshank),B,control,0.072467633
+PW400 (shawshank),C,control,0.054772248
+PW400 (shawshank),D,control,0.053120564
+PW400 (shawshank),dead,control,-0.149236526
+PW400 (shawshank),E,control,0.031614263
+PW400 (shawshank),F,control,-0.006064777
+PW400 (shawshank),G,control,-0.100959181
+PW400 (shawshank),H,control,-0.044449223
+PW400 (shawshank),outside,control,0.033945546
