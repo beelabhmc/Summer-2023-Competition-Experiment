@@ -10,7 +10,6 @@ PW395,H,test,NA
 PW395,outside,test,NA
 PW399,A,control,-0.059993755
 PW399,B,control,0.041014319
-PW400,base,control,-0.172955975
 PW399,C,control,0.058454882
 PW399,D,control,-0.011753424
 PW399,dead,control,0.030086087
@@ -31,7 +30,6 @@ PW437,H,treatment,NA
 PW437,outside,treatment,NA
 PW398 (rascal),A,control,0.115033658
 PW398 (rascal),B,control,-0.042857143
-PW398 (rascal),base,control,-0.55
 PW398 (rascal),C,control,-0.051907255
 PW398 (rascal),D,control,-0.035714286
 PW398 (rascal),dead,control,0.005086014
