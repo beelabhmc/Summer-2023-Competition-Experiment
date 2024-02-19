@@ -303,9 +303,40 @@ ants_wide <- ants_wide %>%
 then, divide columns by populations.
 
 ```{r}
+#nest_pop = colSums(workers + soldiers) need to get the nest pop for each colony
+
+nest_population <- ants_wide %>% 
+  filter(type != "test", nest != "dead", nest != "outside", nest != "base") %>%
+  group_by(`colony name`, type) %>% 
+  summarize(tot_nest_pop = sum(workers + soldiers))
+
 ants_wide <- ants_wide %>% 
-  mutate(ants_prop = (workers+soldiers)/pop_size, workers_prop = (workers)/pop_size, soldiers_prop = (soldiers)/pop_size )
+  mutate(left_join(ants_wide, nest_population))
+
+ants_wide <- ants_wide %>% 
+  mutate(ants_nest_prop = (workers+soldiers)/tot_nest_pop)
 ```
+
+proportion based only on nest movement:
+
+
+
+```{r}
+ants_wide <- ants_wide %>% 
+  mutate(ants__nest_prop = (workers+soldiers)/pop_size, workers_prop = (workers)/pop_size, soldiers_prop = (soldiers)/pop_size )
+```
+
+
+Graph with gradient of proportion info:
+
+```{r}
+ants_wide %>% ggplot(aes(x=nest, y=Colony, color = diff_in_prop)) + geom_point(size=5) + scale_color_gradient2(low="mediumpurple",mid="white",high="darkgoldenrod1", midpoint = median(diff_in_prop), guide=guide_colorbar(direction="horizontal",title.position="top"))
+```
+
+
+
+
+
 
 
 A long data set may work best for a bar plot (geom_bar)
@@ -330,12 +361,12 @@ source: https://stackoverflow.com/questions/12715635/ggplot2-bar-plot-with-both-
 #vector for scale fill manual
 fills <- c("control" = "darkgoldenrod1", "treatment" = "mediumpurple")
 
-pw399 %>% filter(caste %in% c("workers_prop", "soldiers_prop"), nest != "base") %>%
+prop_graph_399<-pw399 %>% filter(caste %in% c("workers_prop", "soldiers_prop"), nest != "base") %>%
   group_by(type, nest) %>% 
   mutate(cum_tot = cumsum(count)) %>% 
   ggplot(aes(nest, cum_tot, fill =type)) + 
-  geom_col(data = . %>% filter( caste=="workers_prop"), position = position_dodge(width = 0.9), alpha = 1) +
-  geom_col(data = . %>% filter( caste=="soldiers_prop"), position = position_dodge(width = 0.9), alpha = 0.4) +
+  geom_col(data = . %>% filter( caste=="workers_prop"), position = position_dodge(width = 0.1), alpha = .1) +
+  geom_col(data = . %>% filter( caste=="soldiers_prop"), position = position_dodge(width = 0.1), alpha = 0.1) +
   geom_text(aes(label=ifelse(queentf,"♛", ""), color = type), data = . %>% filter(caste %in% c("soldiers_prop")), position = position_dodgenudge(y = .015, width = 0.8), size=.2)+
   geom_text(aes(label=ifelse(broodtf,"🍼", ""), color = type), data = . %>% filter(caste %in% c("soldiers_prop")), position = position_dodgenudge(y = .001, width = 0.8), size=.1)+
   geom_tile(aes(y=NA_integer_, alpha = factor(caste))) + 
@@ -346,7 +377,9 @@ pw399 %>% filter(caste %in% c("workers_prop", "soldiers_prop"), nest != "base") 
   xlab("Nests")+
   ylab("Proportion of Ants")
 
-ggsave("colony399.png", width = 7, height = 4)
+prop_graph_399
+
+#ggsave("colony399.png", width = 7, height = 4)
 ```
 
 
