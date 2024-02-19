@@ -171,6 +171,79 @@ pw400 %>% filter(caste %in% c("workers", "soldiers")) %>%
 
 
 
+
+
+
+
+NEW QUESTION:Can we represent the number of ants in a nest as a proportion of the colony?
+
+First add in population numbers
+
+```{r}
+population <- read_csv("Competition experiment data - Population at Start Summary.csv")
+```
+merge this with ants_wide
+
+```{r}
+ants_wide <- ants_wide %>% 
+  mutate(left_join(ants_wide, population))
+
+
+```
+
+Actually only want population that was in nests.
+
+```{r}
+#nest pop for each colony
+
+nest_population <- ants_wide %>% 
+  filter(type != "test", nest != "dead", nest != "outside", nest != "base") %>%
+  group_by(`colony name`, type) %>% 
+  summarize(tot_nest_pop = sum(workers + soldiers))
+
+ants_wide <- ants_wide %>% 
+  mutate(left_join(ants_wide, nest_population))
+
+
+ants_wide <- ants_wide %>% 
+  mutate(ants_nest_prop = (workers+soldiers)/tot_nest_pop)
+```
+
+proportion based only on nest movement:
+
+
+```{r}
+#add difference in proportion (control-treatment) per nest
+#may be easiest to do in sheets then add in here
+
+diff_in_prop <- read_csv("Competition experiment data - Diff_in_prop.csv")
+
+ants_wide <- ants_wide %>% 
+  mutate(right_join(ants_wide, diff_in_prop))
+
+
+```
+
+
+Graph with gradient of proportion info:
+
+```{r}
+# diff_median <- ants_wide %>% 
+#   filter(!is.na(diff_in_proportion)) %>% 
+#   median(diff_in_proportion)
+
+ants_wide %>% 
+  filter(!is.na(diff_in_proportion)) %>% 
+  ggplot(aes(x=nest, y= `colony name`, color = diff_in_proportion)) + geom_point(size=12) +
+  scale_color_gradient2(low="mediumpurple",mid="white",high="darkgoldenrod1", midpoint =
+  0, guide=guide_colorbar(direction="horizontal",title.position="top"))
+```
+
+
+
+
+
+
 STATISTICAL ANALYSIS
 
 
@@ -281,59 +354,6 @@ summary(model.brood.bynest)
 sjPlot::tab_model(model.brood.bynest)
 
 ```
-
-
-
-
-NEW QUESTION:Can we represent the number of ants in a nest as a proportion of the colony?
-
-First add in population numbers
-
-```{r}
-population <- read_csv("Competition experiment data - Population at Start Summary.csv")
-```
-merge this with ants_wide
-
-```{r}
-ants_wide <- ants_wide %>% 
-  mutate(left_join(ants_wide, population))
-```
-
-
-then, divide columns by populations.
-
-```{r}
-#nest_pop = colSums(workers + soldiers) need to get the nest pop for each colony
-
-nest_population <- ants_wide %>% 
-  filter(type != "test", nest != "dead", nest != "outside", nest != "base") %>%
-  group_by(`colony name`, type) %>% 
-  summarize(tot_nest_pop = sum(workers + soldiers))
-
-ants_wide <- ants_wide %>% 
-  mutate(left_join(ants_wide, nest_population))
-
-ants_wide <- ants_wide %>% 
-  mutate(ants_nest_prop = (workers+soldiers)/tot_nest_pop)
-```
-
-proportion based only on nest movement:
-
-
-
-```{r}
-ants_wide <- ants_wide %>% 
-  mutate(ants__nest_prop = (workers+soldiers)/pop_size, workers_prop = (workers)/pop_size, soldiers_prop = (soldiers)/pop_size )
-```
-
-
-Graph with gradient of proportion info:
-
-```{r}
-ants_wide %>% ggplot(aes(x=nest, y=Colony, color = diff_in_prop)) + geom_point(size=5) + scale_color_gradient2(low="mediumpurple",mid="white",high="darkgoldenrod1", midpoint = median(diff_in_prop), guide=guide_colorbar(direction="horizontal",title.position="top"))
-```
-
-
 
 
 
