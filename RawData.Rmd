@@ -207,20 +207,30 @@ ants_wide <- ants_wide %>%
 
 ants_wide <- ants_wide %>% 
   mutate(ants_nest_prop = (workers+soldiers)/tot_nest_pop)
+
 ```
-
-proportion based only on nest movement:
-
-
+A long data set may work best for obtaining the difference in proportion
 ```{r}
-#add difference in proportion (control-treatment) per nest
-#may be easiest to do in sheets then add in here
+# create a data set of colony, nest, control proportion, and treatment proportion
+treatment_proportion_data <- ants_wide %>% 
+  filter(type != "test", nest != "dead", nest != "outside", nest != "base", type == "treatment") %>% 
+  select(`colony name`, `nest`, `ants_nest_prop`)
 
-diff_in_prop <- read_csv("Competition experiment data - Diff_in_prop.csv")
+colnames(treatment_proportion_data) <- c('colony', 'nest' , 'treatment_prop')
 
-ants_wide <- ants_wide %>% 
-  mutate(right_join(ants_wide, diff_in_prop))
 
+control_proportion_data <- ants_wide %>% 
+  filter(type != "test", nest != "dead", nest != "outside", nest != "base", type == "control") %>% 
+  select(`colony name`, `nest`, `ants_nest_prop`)
+
+colnames(control_proportion_data) <- c('colony', 'nest' , 'control_prop')
+
+proportions <- treatment_proportion_data %>% 
+  mutate(left_join(treatment_proportion_data, control_proportion_data))
+
+
+proportions <- proportions %>% 
+  mutate(diff_in_prop = control_prop - treatment_prop)
 
 ```
 
@@ -232,11 +242,12 @@ Graph with gradient of proportion info:
 #   filter(!is.na(diff_in_proportion)) %>% 
 #   median(diff_in_proportion)
 
-ants_wide %>% 
-  filter(!is.na(diff_in_proportion)) %>% 
-  ggplot(aes(x=nest, y= `colony name`, color = diff_in_proportion)) + geom_point(size=12) +
+proportions %>% 
+  ggplot(aes(x=nest, y= colony, color = diff_in_prop)) + geom_point(size=12) +
   scale_color_gradient2(low="mediumpurple",mid="white",high="darkgoldenrod1", midpoint =
   0, guide=guide_colorbar(direction="horizontal",title.position="top"))
+
+#ggsave("gradient.png", width = 7, height = 4)
 ```
 
 
