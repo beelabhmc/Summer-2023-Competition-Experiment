@@ -16,7 +16,7 @@ library(glmmTMB)
 library(sjPlot)
 theme_set(theme_classic())
 ```
-#Data Sets
+# Data Sets
 Load the CSV
 
 ```{r}
@@ -35,10 +35,10 @@ ants_long <- ants_wide %>%
   pivot_longer(c(`workers`, `soldiers`, `queen`, `winged queens`, `males`), names_to = "caste", values_to = "count")
 ```
 
-##mutations and variations on ants_wide
+## mutations and variations on ants_wide
 For representing the number of ants in a nest as a proportion of the colony, we want to save the total population (may be relevant) and the population **in nests**.
 
-###Sum of workers
+### Sum of workers
 Add a column for the sum of workers, which is both workers and soldiers
 
 ```{r}
@@ -107,7 +107,7 @@ proportions <- proportions %>%
   mutate(diff_in_prop = control_prop - treatment_prop)
 
 ```
-###Region assignment
+### Region assignment
 Add in a column for region assignment (used in GLMM)
 Add a column that assigns regions
 
@@ -131,15 +131,15 @@ ants_by_regions <- ants_wide %>%
 group_by(colony, type, region) %>% 
   summarize(across(c(workers, soldiers, workerSum), sum))
 ```
-##mutations on ants_long
+## mutations on ants_long
 
 
 
 
 
-#VISUALIZATION
+# VISUALIZATION
 
-##Individual Nest Visualization
+## Individual Nest Visualization
 Make a graph for each colony (4 graphs). Group them by type (control/treatment). Make a histogram of the count (workers + soldiers) of ants in each nest. For each bar, the aesthetic should display worker count on the bottom and soldier count on the top. Add a symbol for the presence of queens or brood.
 
 Let's make 399's tibble
@@ -269,7 +269,7 @@ pw400 %>% filter(caste %in% c("workers", "soldiers")) %>%
 #ggsave("colony400.png", width = 7, height = 4)
 ```
 
-##Proportion visualization
+## Proportion visualization
 NEW QUESTION:Can we represent the number of ants in a nest as a proportion of the colony?
 
 Use data "proportions", which in sections "mutations and variations on ants_wide" uses data from ants_wide to find proportions. 
@@ -285,7 +285,7 @@ proportions %>%
 #ggsave("gradient.png", width = 7, height = 4)
 ```
 
-###Diff in Prop Tree
+### Diff in Prop Tree
 Made in Adobe Illustrator
 
 ```{r}
@@ -293,13 +293,13 @@ knitr::include_graphics("prop_tree_poster draft.png")
 ```
 
 
-#STATISTICAL ANALYSIS
+# STATISTICAL ANALYSIS
 
 Next, let's create a model to look for a preference for specific nests per treatment.
 
-##GLMMs
+## GLMMs
 
-###without interation
+### without interation
 
 ```{r}
 model.workers.bynest.nointeracton <- glmmTMB(workerSum ~ nest+type + 
@@ -311,7 +311,7 @@ sjPlot::tab_model(model.workers.bynest.nointeracton)
 
 ```
 
-###with interaction
+### with interaction
 ```{r}
 model.workers.bynest <- glmmTMB(workerSum ~ nest*type + 
                           (1|colony) -1,
@@ -329,7 +329,7 @@ Can ANOVA give us more insight into the significance of the GLMM models (no inte
 anova(model.workers.bynest.nointeracton,
   model.workers.bynest)
 ```
-###by region
+### by region
 What if we were to compare across regions A, BCD, E, FGH? (use "ants_by_region")
 
 
@@ -342,7 +342,7 @@ summary(model.workers.byregion)
 sjPlot::tab_model(model.workers.byregion)
 
 ```
-###GLMM on soldiers
+### GLMM on soldiers
 
 ```{r}
 model.soldiers.bynest <- glmmTMB(soldiers ~ nest*type + 
@@ -353,7 +353,7 @@ summary(model.soldiers.bynest)
 sjPlot::tab_model(model.soldiers.bynest)
 
 ```
-###GLMM on brood
+### GLMM on brood
 Can I just use the true and false that already exist? Why 1 and 0?
 ```{r}
 ants_brood_binary <- ants_wide %>% 
@@ -375,7 +375,7 @@ sjPlot::tab_model(model.brood.bynest)
 
 
 
-#Can ignore:
+# Can ignore:
 
 Practice runs:
 
