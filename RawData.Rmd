@@ -22,6 +22,7 @@ Load the CSV
 ```{r}
 ants_wide <- read_csv("Competition experiment data - Tidy Census.csv")
 ```
+
 Let's add a column of the queens as a binary true/false
 ```{r}
 ants_wide <- ants_wide %>% mutate(queentf = ifelse(queen>0,TRUE, FALSE), broodtf = ifelse(brood == "y", TRUE, FALSE))
@@ -37,17 +38,31 @@ ants_long <- ants_wide %>%
 ##mutations and variations on ants_wide
 For representing the number of ants in a nest as a proportion of the colony, we want to save the total population (may be relevant) and the population **in nests**.
 
+###Sum of workers
+Add a column for the sum of workers, which is both workers and soldiers
+
+```{r}
+ants_wide <- ants_wide %>% 
+  filter(type != "test", nest != "dead", nest != "outside", nest != "base") %>%
+  mutate(
+    workerSum = workers + soldiers)
+colnames(ants_wide)[1] ="colony"
+
+```
+
+
 ### Total population data
 First add in colony population numbers (not useful for proportion, but good to have)
 
 ```{r}
 population <- read_csv("Competition experiment data - Population at Start Summary.csv")
 ```
-merge this with ants_wide
+merge this with ants_wide. Currently throwing an error. As of right now, this data is not being used, so it will be commented out.
 
 ```{r}
-ants_wide <- ants_wide %>% 
-  mutate(left_join(ants_wide, population))
+#ants_wide <- ants_wide %>% 
+ # mutate(left_join(ants_wide, population))
+
 ```
 ### Populations in nests data
 Add in colony population that was **in nests**. Then, get the proportion of ants for that nest.
@@ -57,7 +72,7 @@ Add in colony population that was **in nests**. Then, get the proportion of ants
 
 nest_population <- ants_wide %>% 
   filter(type != "test", nest != "dead", nest != "outside", nest != "base") %>%
-  group_by(`colony name`, type) %>% 
+  group_by(`colony`, type) %>% 
   summarize(tot_nest_pop = sum(workers + soldiers))
 
 ants_wide <- ants_wide %>% 
@@ -73,14 +88,14 @@ An even wider data set may work best for obtaining the difference in proportion,
 # create a data set of colony, nest, control proportion, and treatment proportion
 treatment_proportion_data <- ants_wide %>% 
   filter(type != "test", nest != "dead", nest != "outside", nest != "base", type == "treatment") %>% 
-  select(`colony name`, `nest`, `ants_nest_prop`)
+  select(`colony`, `nest`, `ants_nest_prop`)
 
 colnames(treatment_proportion_data) <- c('colony', 'nest' , 'treatment_prop')
 
 
 control_proportion_data <- ants_wide %>% 
   filter(type != "test", nest != "dead", nest != "outside", nest != "base", type == "control") %>% 
-  select(`colony name`, `nest`, `ants_nest_prop`)
+  select(`colony`, `nest`, `ants_nest_prop`)
 
 colnames(control_proportion_data) <- c('colony', 'nest' , 'control_prop')
 
@@ -92,7 +107,30 @@ proportions <- proportions %>%
   mutate(diff_in_prop = control_prop - treatment_prop)
 
 ```
+###Region assignment
+Add in a column for region assignment (used in GLMM)
+Add a column that assigns regions
 
+```{r}
+ants_wide <- ants_wide %>% 
+  mutate(region = ifelse(nest == "A", "A",
+                         ifelse(nest == "B", "BCD",
+                                ifelse(nest == "C", "BCD",
+                                       ifelse(nest == "D", "BCD",
+                                              ifelse(nest == "E", "E",
+                                                     ifelse(nest == "F", "FGH",
+                                                            ifelse(nest == "G", "FGH",
+                                                                   ifelse(nest == "H", "FGH","none")))))))))
+
+
+```
+
+Now, combine rows of the same region. Source: https://www.r-bloggers.com/2022/08/combine-rows-with-same-column-values-in-r/
+```{r}
+ants_by_regions <- ants_wide %>%
+group_by(colony, type, region) %>% 
+  summarize(across(c(workers, soldiers, workerSum), sum))
+```
 ##mutations on ants_long
 
 
@@ -234,12 +272,11 @@ pw400 %>% filter(caste %in% c("workers", "soldiers")) %>%
 ##Proportion visualization
 NEW QUESTION:Can we represent the number of ants in a nest as a proportion of the colony?
 
-Use proportions, which in sections "mutations and variations on ants_wide" uses data from ants_wide to find proportions. 
+Use data "proportions", which in sections "mutations and variations on ants_wide" uses data from ants_wide to find proportions. 
 
 Graph with gradient of proportion info:
 
 ```{r}
-
 proportions %>% 
   ggplot(aes(x=nest, y= colony, color = diff_in_prop)) + geom_point(size=12) +
   scale_color_gradient2(low="mediumpurple",mid="white",high="darkgoldenrod1", midpoint =
@@ -256,40 +293,29 @@ knitr::include_graphics("prop_tree_poster draft.png")
 ```
 
 
-
-
-
 #STATISTICAL ANALYSIS
-
 
 Next, let's create a model to look for a preference for specific nests per treatment.
 
-First, make a data frame that includes the sum of the workers and the soldiers
-```{r}
-ants_sum <- ants_wide %>% 
-  filter(type != "test", nest != "dead", nest != "outside", nest != "base") %>%
-  mutate(
-    workerSum = workers + soldiers)
-colnames(ants_sum)[1] ="colony"
+##GLMMs
 
-```
+###without interation
 
-Without interaction: 
 ```{r}
 model.workers.bynest.nointeracton <- glmmTMB(workerSum ~ nest+type + 
                           (1|colony) -1,
-                        family="nbinom2", data = ants_sum)
+                        family="nbinom2", data = ants_wide)
 
 summary(model.workers.bynest.nointeracton)
 sjPlot::tab_model(model.workers.bynest.nointeracton)
 
 ```
 
-with interaction:
+###with interaction
 ```{r}
 model.workers.bynest <- glmmTMB(workerSum ~ nest*type + 
                           (1|colony) -1,
-                        family="nbinom2", data = ants_sum)
+                        family="nbinom2", data = ants_wide)
 
 summary(model.workers.bynest)
 sjPlot::tab_model(model.workers.bynest)
@@ -303,32 +329,9 @@ Can ANOVA give us more insight into the significance of the GLMM models (no inte
 anova(model.workers.bynest.nointeracton,
   model.workers.bynest)
 ```
+###by region
+What if we were to compare across regions A, BCD, E, FGH? (use "ants_by_region")
 
-What if we were to lump rows into the regions A, BCD, E, FGH?
-Add a column that assigns regions
-
-```{r}
-ants_region_assignment <- ants_sum %>% 
-  mutate(region = ifelse(nest == "A", "A",
-                         ifelse(nest == "B", "BCD",
-                                ifelse(nest == "C", "BCD",
-                                       ifelse(nest == "D", "BCD",
-                                              ifelse(nest == "E", "E",
-                                                     ifelse(nest == "F", "FGH",
-                                                            ifelse(nest == "G", "FGH",
-                                                                   ifelse(nest == "H", "FGH","none")))))))))
-
-
-```
-
-Now, combine rows of the same region. Source: https://www.r-bloggers.com/2022/08/combine-rows-with-same-column-values-in-r/
-```{r}
-#not what I want to do and doesn't work
-ants_by_regions <- ants_region_assignment %>%
-group_by(colony, type, region) %>% 
-  summarize(across(c(workers, soldiers, workerSum), sum))
-  
-```
 
 ```{r}
 model.workers.byregion <- glmmTMB(workerSum ~ region*type + 
@@ -339,26 +342,25 @@ summary(model.workers.byregion)
 sjPlot::tab_model(model.workers.byregion)
 
 ```
-GLMM on soldiers
+###GLMM on soldiers
 
 ```{r}
 model.soldiers.bynest <- glmmTMB(soldiers ~ nest*type + 
                           (1|colony) -1,
-                        family="nbinom2", data = ants_sum)
+                        family="nbinom2", data = ants_wide)
 
 summary(model.soldiers.bynest)
 sjPlot::tab_model(model.soldiers.bynest)
 
 ```
-GLMM on brood
-
+###GLMM on brood
+#Can I just use the true and false that already exist? Why 1 and 0?
 ```{r}
-ants_brood_binary <- ants_sum %>% 
+ants_brood_binary <- ants_wide %>% 
   filter(!is.na(brood)) %>% 
   mutate(brood_binary = ifelse(brood == "y", 1, 0))
 ```
 
-Why are there infinities?
 
 ```{r}
 model.brood.bynest <- glmmTMB(brood_binary ~ nest*type + 
