@@ -16,7 +16,7 @@ library(glmmTMB)
 library(sjPlot)
 theme_set(theme_classic())
 ```
-
+#Data Sets
 Load the CSV
 
 ```{r}
@@ -27,24 +27,87 @@ Let's add a column of the queens as a binary true/false
 ants_wide <- ants_wide %>% mutate(queentf = ifelse(queen>0,TRUE, FALSE), broodtf = ifelse(brood == "y", TRUE, FALSE))
 ```
 
-A long data set may work best for a bar plot (geom_bar)
+A long data set may work best for some visualizations (bar plot) and tests
 ```{r}
 # create a data set by making data long
-ants <- ants_wide %>% 
+ants_long <- ants_wide %>% 
   pivot_longer(c(`workers`, `soldiers`, `queen`, `winged queens`, `males`), names_to = "caste", values_to = "count")
 ```
 
+##mutations and variations on ants_wide
+For representing the number of ants in a nest as a proportion of the colony, we want to save the total population (may be relevant) and the population **in nests**.
+
+### Total population data
+First add in colony population numbers (not useful for proportion, but good to have)
+
+```{r}
+population <- read_csv("Competition experiment data - Population at Start Summary.csv")
+```
+merge this with ants_wide
+
+```{r}
+ants_wide <- ants_wide %>% 
+  mutate(left_join(ants_wide, population))
+```
+### Populations in nests data
+Add in colony population that was **in nests**. Then, get the proportion of ants for that nest.
+
+```{r}
+#nest pop for each colony
+
+nest_population <- ants_wide %>% 
+  filter(type != "test", nest != "dead", nest != "outside", nest != "base") %>%
+  group_by(`colony name`, type) %>% 
+  summarize(tot_nest_pop = sum(workers + soldiers))
+
+ants_wide <- ants_wide %>% 
+  mutate(left_join(ants_wide, nest_population))
 
 
-VISUALIZATION:
+ants_wide <- ants_wide %>% 
+  mutate(ants_nest_prop = (workers+soldiers)/tot_nest_pop)
+
+```
+An even wider data set may work best for obtaining the difference in proportion, such that the control and treatment proportions are in one colony+nest observation.
+```{r}
+# create a data set of colony, nest, control proportion, and treatment proportion
+treatment_proportion_data <- ants_wide %>% 
+  filter(type != "test", nest != "dead", nest != "outside", nest != "base", type == "treatment") %>% 
+  select(`colony name`, `nest`, `ants_nest_prop`)
+
+colnames(treatment_proportion_data) <- c('colony', 'nest' , 'treatment_prop')
 
 
+control_proportion_data <- ants_wide %>% 
+  filter(type != "test", nest != "dead", nest != "outside", nest != "base", type == "control") %>% 
+  select(`colony name`, `nest`, `ants_nest_prop`)
+
+colnames(control_proportion_data) <- c('colony', 'nest' , 'control_prop')
+
+proportions <- treatment_proportion_data %>% 
+  mutate(left_join(treatment_proportion_data, control_proportion_data))
+
+#NEW DATA SET IS CALLED "PROPORTIONS"
+proportions <- proportions %>% 
+  mutate(diff_in_prop = control_prop - treatment_prop)
+
+```
+
+##mutations on ants_long
+
+
+
+
+
+#VISUALIZATION
+
+##Individual Nest Visualization
 Make a graph for each colony (4 graphs). Group them by type (control/treatment). Make a histogram of the count (workers + soldiers) of ants in each nest. For each bar, the aesthetic should display worker count on the bottom and soldier count on the top. Add a symbol for the presence of queens or brood.
 
 Let's make 399's tibble
 ```{r}
 #make a tibble of the colony's nests
-pw399 <- ants %>% 
+pw399 <- ants_long %>% 
   filter(`colony name` == "PW399", nest != "dead", nest != "outside")
 ```
 
@@ -77,7 +140,7 @@ pw399 %>% filter(caste %in% c("workers", "soldiers"), nest != "base") %>%
 Let's make 437's tibble
 ```{r}
 #make a tibble of the colony's nests
-pw437 <- ants %>% 
+pw437 <- ants_long %>% 
   filter(`colony name` == "PW437", nest != "dead", nest != "outside")
 ```
 
@@ -108,7 +171,7 @@ pw437 %>% filter(caste %in% c("workers", "soldiers")) %>%
 Let's make 398's tibble
 ```{r}
 #make a tibble of the colony's nests
-pw398 <- ants %>% 
+pw398 <- ants_long %>% 
   filter(`colony name` == "PW398 (rascal)", nest != "dead", nest != "outside")
 ```
 
@@ -140,7 +203,7 @@ pw398 %>% filter(caste %in% c("workers", "soldiers"), nest != "base") %>%
 Let's make 400's tibble
 ```{r}
 #make a tibble of the colony's nests
-pw400 <- ants %>% 
+pw400 <- ants_long %>% 
   filter(`colony name` == "PW400 (shawshank)", nest != "dead", nest != "outside")
 ```
 
@@ -168,79 +231,14 @@ pw400 %>% filter(caste %in% c("workers", "soldiers")) %>%
 #ggsave("colony400.png", width = 7, height = 4)
 ```
 
-
-
-
-
-
-
-
+##Proportion visualization
 NEW QUESTION:Can we represent the number of ants in a nest as a proportion of the colony?
 
-First add in population numbers
-
-```{r}
-population <- read_csv("Competition experiment data - Population at Start Summary.csv")
-```
-merge this with ants_wide
-
-```{r}
-ants_wide <- ants_wide %>% 
-  mutate(left_join(ants_wide, population))
-
-
-```
-
-Actually only want population that was in nests.
-
-```{r}
-#nest pop for each colony
-
-nest_population <- ants_wide %>% 
-  filter(type != "test", nest != "dead", nest != "outside", nest != "base") %>%
-  group_by(`colony name`, type) %>% 
-  summarize(tot_nest_pop = sum(workers + soldiers))
-
-ants_wide <- ants_wide %>% 
-  mutate(left_join(ants_wide, nest_population))
-
-
-ants_wide <- ants_wide %>% 
-  mutate(ants_nest_prop = (workers+soldiers)/tot_nest_pop)
-
-```
-A long data set may work best for obtaining the difference in proportion
-```{r}
-# create a data set of colony, nest, control proportion, and treatment proportion
-treatment_proportion_data <- ants_wide %>% 
-  filter(type != "test", nest != "dead", nest != "outside", nest != "base", type == "treatment") %>% 
-  select(`colony name`, `nest`, `ants_nest_prop`)
-
-colnames(treatment_proportion_data) <- c('colony', 'nest' , 'treatment_prop')
-
-
-control_proportion_data <- ants_wide %>% 
-  filter(type != "test", nest != "dead", nest != "outside", nest != "base", type == "control") %>% 
-  select(`colony name`, `nest`, `ants_nest_prop`)
-
-colnames(control_proportion_data) <- c('colony', 'nest' , 'control_prop')
-
-proportions <- treatment_proportion_data %>% 
-  mutate(left_join(treatment_proportion_data, control_proportion_data))
-
-
-proportions <- proportions %>% 
-  mutate(diff_in_prop = control_prop - treatment_prop)
-
-```
-
+Use proportions, which in sections "mutations and variations on ants_wide" uses data from ants_wide to find proportions. 
 
 Graph with gradient of proportion info:
 
 ```{r}
-# diff_median <- ants_wide %>% 
-#   filter(!is.na(diff_in_proportion)) %>% 
-#   median(diff_in_proportion)
 
 proportions %>% 
   ggplot(aes(x=nest, y= colony, color = diff_in_prop)) + geom_point(size=12) +
@@ -250,12 +248,18 @@ proportions %>%
 #ggsave("gradient.png", width = 7, height = 4)
 ```
 
+###Diff in Prop Tree
+Made in Adobe Illustrator
+
+```{r}
+knitr::include_graphics("prop_tree_poster draft.png")
+```
 
 
 
 
 
-STATISTICAL ANALYSIS
+#STATISTICAL ANALYSIS
 
 
 Next, let's create a model to look for a preference for specific nests per treatment.
@@ -373,7 +377,7 @@ sjPlot::tab_model(model.brood.bynest)
 A long data set may work best for a bar plot (geom_bar)
 ```{r}
 # create a data set by making data long
-ants <- ants_wide %>% 
+ants_long <- ants_wide %>% 
   pivot_longer(c(`workers`, `soldiers`, `queen`, `winged queens`, `males`, `workers_prop`, `soldiers_prop`), names_to = "caste", values_to = "count")
 ```
 
@@ -381,54 +385,13 @@ ants <- ants_wide %>%
 Let's make 399's tibble
 ```{r}
 #make a tibble of the colony's nests
-pw399 <- ants %>% 
+pw399 <- ants_long %>% 
   filter(`colony name` == "PW399", nest != "dead", nest != "outside")
 ```
 
 
-399 graph:
-source: https://stackoverflow.com/questions/12715635/ggplot2-bar-plot-with-both-stack-and-dodge
-```{r}
-#vector for scale fill manual
-fills <- c("control" = "darkgoldenrod1", "treatment" = "mediumpurple")
 
-prop_graph_399<-pw399 %>% filter(caste %in% c("workers_prop", "soldiers_prop"), nest != "base") %>%
-  group_by(type, nest) %>% 
-  mutate(cum_tot = cumsum(count)) %>% 
-  ggplot(aes(nest, cum_tot, fill =type)) + 
-  geom_col(data = . %>% filter( caste=="workers_prop"), position = position_dodge(width = 0.1), alpha = .1) +
-  geom_col(data = . %>% filter( caste=="soldiers_prop"), position = position_dodge(width = 0.1), alpha = 0.1) +
-  geom_text(aes(label=ifelse(queentf,"♛", ""), color = type), data = . %>% filter(caste %in% c("soldiers_prop")), position = position_dodgenudge(y = .015, width = 0.8), size=.2)+
-  geom_text(aes(label=ifelse(broodtf,"🍼", ""), color = type), data = . %>% filter(caste %in% c("soldiers_prop")), position = position_dodgenudge(y = .001, width = 0.8), size=.1)+
-  geom_tile(aes(y=NA_integer_, alpha = factor(caste))) + 
-  scale_alpha_manual(values = c(0.4,1), name = "caste")+
-  scale_fill_manual(values = fills)+
-  scale_color_manual(values = fills)+
-  ylim(0, 0.2)+
-  xlab("Nests")+
-  ylab("Proportion of Ants")
-
-prop_graph_399
-
-#ggsave("colony399.png", width = 7, height = 4)
-```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Can ignore:
+#Can ignore:
 
 Practice runs:
 
