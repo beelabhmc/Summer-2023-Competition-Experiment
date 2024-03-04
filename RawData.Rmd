@@ -354,7 +354,7 @@ sjPlot::tab_model(model.soldiers.bynest)
 
 ```
 ###GLMM on brood
-#Can I just use the true and false that already exist? Why 1 and 0?
+Can I just use the true and false that already exist? Why 1 and 0?
 ```{r}
 ants_brood_binary <- ants_wide %>% 
   filter(!is.na(brood)) %>% 
@@ -372,24 +372,6 @@ sjPlot::tab_model(model.brood.bynest)
 
 ```
 
-
-
-
-
-A long data set may work best for a bar plot (geom_bar)
-```{r}
-# create a data set by making data long
-ants_long <- ants_wide %>% 
-  pivot_longer(c(`workers`, `soldiers`, `queen`, `winged queens`, `males`, `workers_prop`, `soldiers_prop`), names_to = "caste", values_to = "count")
-```
-
-
-Let's make 399's tibble
-```{r}
-#make a tibble of the colony's nests
-pw399 <- ants_long %>% 
-  filter(`colony name` == "PW399", nest != "dead", nest != "outside")
-```
 
 
 
