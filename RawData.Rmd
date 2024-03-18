@@ -302,23 +302,23 @@ Next, let's create a model to look for a preference for specific nests per treat
 ### without interation
 
 ```{r}
-model.workers.bynest.nointeracton <- glmmTMB(workerSum ~ nest+type + 
-                          (1|colony) -1,
-                        family="nbinom2", data = ants_wide)
-
-summary(model.workers.bynest.nointeracton)
-sjPlot::tab_model(model.workers.bynest.nointeracton)
+# model.workers.bynest.nointeracton <- glmmTMB(workerSum ~ nest+type + 
+#                           (1|colony) -1,
+#                         family="nbinom2", data = ants_wide)
+# 
+# summary(model.workers.bynest.nointeracton)
+# sjPlot::tab_model(model.workers.bynest.nointeracton)
 
 ```
 
 ### with interaction
 ```{r}
-model.workers.bynest <- glmmTMB(workerSum ~ nest*type + 
-                          (1|colony) -1,
-                        family="nbinom2", data = ants_wide)
-
-summary(model.workers.bynest)
-sjPlot::tab_model(model.workers.bynest)
+# model.workers.bynest <- glmmTMB(workerSum ~ nest*type + 
+#                           (1|colony) -1,
+#                         family="nbinom2", data = ants_wide)
+# 
+# summary(model.workers.bynest)
+# sjPlot::tab_model(model.workers.bynest)
 
 ```
 
@@ -326,53 +326,58 @@ sjPlot::tab_model(model.workers.bynest)
 Can ANOVA give us more insight into the significance of the GLMM models (no interaction vs interaction?)?
 
 ```{r}
-anova(model.workers.bynest.nointeracton,
-  model.workers.bynest)
+# anova(model.workers.bynest.nointeracton,
+#   model.workers.bynest)
 ```
 ### by region
 What if we were to compare across regions A, BCD, E, FGH? (use "ants_by_region")
 
 
 ```{r}
-model.workers.byregion <- glmmTMB(workerSum ~ region*type + 
-                          (1|colony) -1,
-                        family="nbinom2", data = ants_by_regions)
-
-summary(model.workers.byregion)
-sjPlot::tab_model(model.workers.byregion)
+# model.workers.byregion <- glmmTMB(workerSum ~ region*type + 
+#                           (1|colony) -1,
+#                         family="nbinom2", data = ants_by_regions)
+# 
+# summary(model.workers.byregion)
+# sjPlot::tab_model(model.workers.byregion)
 
 ```
 ### GLMM on soldiers
 
 ```{r}
-model.soldiers.bynest <- glmmTMB(soldiers ~ nest*type + 
-                          (1|colony) -1,
-                        family="nbinom2", data = ants_wide)
-
-summary(model.soldiers.bynest)
-sjPlot::tab_model(model.soldiers.bynest)
+# model.soldiers.bynest <- glmmTMB(soldiers ~ nest*type + 
+#                           (1|colony) -1,
+#                         family="nbinom2", data = ants_wide)
+# 
+# summary(model.soldiers.bynest)
+# sjPlot::tab_model(model.soldiers.bynest)
 
 ```
 ### GLMM on brood
 Can I just use the true and false that already exist? Why 1 and 0?
 ```{r}
-ants_brood_binary <- ants_wide %>% 
-  filter(!is.na(brood)) %>% 
-  mutate(brood_binary = ifelse(brood == "y", 1, 0))
+# ants_brood_binary <- ants_wide %>% 
+#   filter(!is.na(brood)) %>% 
+#   mutate(brood_binary = ifelse(brood == "y", 1, 0))
 ```
 
 
 ```{r}
-model.brood.bynest <- glmmTMB(brood_binary ~ nest*type + 
-                          (1|colony) -1,
-                        family="nbinom2", data = ants_brood_binary)
-
-summary(model.brood.bynest)
-sjPlot::tab_model(model.brood.bynest)
+# model.brood.bynest <- glmmTMB(brood_binary ~ nest*type + 
+#                           (1|colony) -1,
+#                         family="nbinom2", data = ants_brood_binary)
+# 
+# summary(model.brood.bynest)
+# sjPlot::tab_model(model.brood.bynest)
 
 ```
 
+## Distance Analysis:
+Are there trends in distance between nests? Does this show clustering?
 
+let d_ij = distance between nest i and j
+n = number of nests (8)
+p_i (or j)= the population of ants in nest i (or j)
 
 
 # Can ignore:
