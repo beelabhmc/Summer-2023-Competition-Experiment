@@ -375,9 +375,73 @@ Can I just use the true and false that already exist? Why 1 and 0?
 ## Distance Analysis:
 Are there trends in distance between nests? Does this show clustering?
 
-let d_ij = distance between nest i and j
+We will define distance by number of junctions, as the physical distance between each junction is equivalent. Later, it may be worth more heavily weighting extreme angles 
+
+let d_ij = distance between nest i and j. Note ij is not the same as ji
+
+ - We can think of this as the probability of moving/traversing from nest i to nest j. For example, if we consider choosing a direction a 50/50 chance, then, pr(A|E) = (0.5)^9. Taking the -log_2 of each side, we get -log_2(0.5^9) = **-9log_2(0.5)** = 9
+
 n = number of nests (8)
-p_i (or j)= the population of ants in nest i (or j)
+p_i (or j)= the proportion population of ants in nest i (or j)
+
+
+
+the metric of weighted efficiency is **(1/n(n-1)) sum_i sum_j ((p_i * p_j)/d_ij)**
+
+ - one over the distance is a measure of efficiency to travel between i and j.
+ - pi pj is a measure of how much traffic to expect between the two nests
+ - 1/n(n-1) normalizes 
+ 
+
+```{r}
+#pretend I have already made the distances (probabilities of traversing) and they are stored in junction_dist
+#junc_data <-
+#junction_dist <- matrix(junc_data, 8, 8, byrow, dimnames)
+
+junction_dist= matrix(
+     
+  # Taking sequence of elements  
+  c(0, 7, 7, 7, 9, 9, 9, 9, 
+    7, 0, 3, 3, 9, 9, 9, 9, 
+    7, 3, 0, 1, 9, 9, 9, 9, 
+    7, 3, 1, 0, 9, 9, 9, 9, 
+    9, 9, 9, 9, 0, 7, 7, 7, 
+    9, 9, 9, 9, 7, 0, 3, 3, 
+    9, 9, 9, 9, 7, 3, 0, 1, 
+    9, 9, 9, 9, 7, 3, 1, 0), 
+   
+  # No of rows
+  nrow = 8,   
+   
+  # No of columns
+  ncol = 8,         
+   
+  # By default matrices are in column-wise order
+  # So this parameter decides how to arrange the matrix
+  byrow = TRUE         
+)
+  
+# Naming rows
+rownames(junction_dist) = c("a", "b", "c", "d", "e", "f", "g", "h")
+  
+# Naming columns
+colnames(junction_dist) = c("a", "b", "c", "d", "e", "f", "g", "h")
+  
+junction_dist
+
+#because this is a distance matrix (of actually 1/distance), we can use vector multiplication
+
+
+```
+
+
+
+
+
+
+
+
+
 
 
 # Can ignore:
