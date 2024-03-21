@@ -377,7 +377,7 @@ Are there trends in distance between nests? Does this show clustering?
 
 We will define distance by number of junctions, as the physical distance between each junction is equivalent. Later, it may be worth more heavily weighting extreme angles 
 
-let d_ij = distance between nest i and j. Note ij is not the same as ji
+let d_ij = weighted distance between nest i and j. Note ij is not necessarily the same as ji
 
  - We can think of this as the probability of moving/traversing from nest i to nest j. For example, if we consider choosing a direction a 50/50 chance, then, pr(A|E) = (0.5)^9. Taking the -log_2 of each side, we get -log_2(0.5^9) = **-9log_2(0.5)** = 9
 
@@ -394,21 +394,20 @@ the metric of weighted efficiency is **(1/n(n-1)) sum_i sum_j ((p_i * p_j)/d_ij)
  
 
 ```{r}
-#pretend I have already made the distances (probabilities of traversing) and they are stored in junction_dist
-#junc_data <-
-#junction_dist <- matrix(junc_data, 8, 8, byrow, dimnames)
-
+nests = c("A", "B", "C", "D", "E", "F", "G", "H")
+nests 
+n = 8 #number of nests
 junction_dist= matrix(
      
   # Taking sequence of elements  
-  c(0, 7, 7, 7, 9, 9, 9, 9, 
-    7, 0, 3, 3, 9, 9, 9, 9, 
-    7, 3, 0, 1, 9, 9, 9, 9, 
-    7, 3, 1, 0, 9, 9, 9, 9, 
-    9, 9, 9, 9, 0, 7, 7, 7, 
-    9, 9, 9, 9, 7, 0, 3, 3, 
-    9, 9, 9, 9, 7, 3, 0, 1, 
-    9, 9, 9, 9, 7, 3, 1, 0), 
+  c(-0*log(0.5, base = 2), -7*log(0.5, base = 2), -7*log(0.5, base = 2), -7*log(0.5, base = 2), -9*log(0.5, base = 2), -9*log(0.5, base = 2), -9*log(0.5, base = 2), -9*log(0.5, base = 2), 
+    -7*log(0.5, base = 2), -0*log(0.5, base = 2), -3*log(0.5, base = 2), -3*log(0.5, base = 2), -9*log(0.5, base = 2), -9*log(0.5, base = 2), -9*log(0.5, base = 2), -9*log(0.5, base = 2), 
+    -7*log(0.5, base = 2), -3*log(0.5, base = 2), -0*log(0.5, base = 2), -1*log(0.5, base = 2), -9*log(0.5, base = 2), -9*log(0.5, base = 2), -9*log(0.5, base = 2), -9*log(0.5, base = 2), 
+    -7*log(0.5, base = 2), -3*log(0.5, base = 2), -1*log(0.5, base = 2), -0*log(0.5, base = 2), -9*log(0.5, base = 2), -9*log(0.5, base = 2), -9*log(0.5, base = 2), -9*log(0.5, base = 2), 
+    -9*log(0.5, base = 2), -9*log(0.5, base = 2), -9*log(0.5, base = 2), -9*log(0.5, base = 2), -0*log(0.5, base = 2), -7*log(0.5, base = 2), -7*log(0.5, base = 2), -7*log(0.5, base = 2), 
+    -9*log(0.5, base = 2), -9*log(0.5, base = 2), -9*log(0.5, base = 2), -9*log(0.5, base = 2), -7*log(0.5, base = 2), -0*log(0.5, base = 2), -3*log(0.5, base = 2), -3*log(0.5, base = 2), 
+    -9*log(0.5, base = 2), -9*log(0.5, base = 2), -9*log(0.5, base = 2), -9*log(0.5, base = 2), -7*log(0.5, base = 2), -3*log(0.5, base = 2), -0*log(0.5, base = 2), -1*log(0.5, base = 2), 
+    -9*log(0.5, base = 2), -9*log(0.5, base = 2), -9*log(0.5, base = 2), -9*log(0.5, base = 2), -7*log(0.5, base = 2), -3*log(0.5, base = 2), -1*log(0.5, base = 2), -0*log(0.5, base = 2)), 
    
   # No of rows
   nrow = 8,   
@@ -429,9 +428,36 @@ colnames(junction_dist) = c("a", "b", "c", "d", "e", "f", "g", "h")
   
 junction_dist
 
-#because this is a distance matrix (of actually 1/distance), we can use vector multiplication
+#should I make every element 1/itself?
+#need loop over i and j and need to do this for each colony/treatment
+```
 
+```{r}
+#practice with 398 control
 
+props398 <- ants_wide %>% 
+  filter(colony == "PW398 (rascal)", type == "control") %>% 
+  select(nest, ants_nest_prop)
+
+prob_moving_sum = 0
+
+for(i in 1:8) {
+  for (j in 1:8) {
+    if(j!=i){
+    pi <- props398 %>% filter(nest == nests[i])  %>% select(ants_nest_prop)
+    pj <- props398 %>% filter(nest == nests[j])  %>% select(ants_nest_prop)
+    dij = junction_dist[i,j]
+    prob_moving_sum = prob_moving_sum + ((pi*pj)/dij)
+    }
+  }
+}
+prob_moving_sum
+
+#normalize the sum
+
+weighted_efficiency = (1/(n*(n-1))) * prob_moving_sum
+
+weighted_efficiency
 ```
 
 
