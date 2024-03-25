@@ -432,20 +432,40 @@ junction_dist
 ```
 
 ```{r}
-#practice with 398 control
+#398 control
 
 #making proportion vectors 
 p398c <- ants_wide %>% 
   filter(colony == "PW398 (rascal)", type == "control") %>% 
   pull(ants_nest_prop)
 
-weighted_efficiency <- (1/(n*(n-1)))* (t(p398c) %*% junction_dist %*% p398c)
-weighted_efficiency
+weighted_efficiency_398c <- (1/(n*(n-1)))* (t(p398c) %*% junction_dist %*% p398c)
+weighted_efficiency_398c
+```
+```{r}
+#398 treatment
+
+#making proportion vectors 
+p398t <- ants_wide %>% 
+  filter(colony == "PW398 (rascal)", type == "treatment") %>% 
+  pull(ants_nest_prop)
+
+weighted_efficiency_398t <- (1/(n*(n-1)))* (t(p398t) %*% junction_dist %*% p398t)
+weighted_efficiency_398t
 ```
 
 
+```{r}
+#399control
 
+#making proportion vectors 
+p399c <- ants_wide %>% 
+  filter(colony == "PW399", type == "control") %>% 
+  pull(ants_nest_prop)
 
+weighted_efficiency_399c <- (1/(n*(n-1)))* (t(p399c) %*% junction_dist %*% p399c)
+weighted_efficiency_399c
+```
 
 
 
