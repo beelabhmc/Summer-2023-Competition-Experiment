@@ -400,14 +400,14 @@ n = 8 #number of nests
 junction_dist= matrix(
      
   # Taking sequence of elements  
-  c(-0*log(0.5, base = 2), -7*log(0.5, base = 2), -7*log(0.5, base = 2), -7*log(0.5, base = 2), -9*log(0.5, base = 2), -9*log(0.5, base = 2), -9*log(0.5, base = 2), -9*log(0.5, base = 2), 
-    -7*log(0.5, base = 2), -0*log(0.5, base = 2), -3*log(0.5, base = 2), -3*log(0.5, base = 2), -9*log(0.5, base = 2), -9*log(0.5, base = 2), -9*log(0.5, base = 2), -9*log(0.5, base = 2), 
-    -7*log(0.5, base = 2), -3*log(0.5, base = 2), -0*log(0.5, base = 2), -1*log(0.5, base = 2), -9*log(0.5, base = 2), -9*log(0.5, base = 2), -9*log(0.5, base = 2), -9*log(0.5, base = 2), 
-    -7*log(0.5, base = 2), -3*log(0.5, base = 2), -1*log(0.5, base = 2), -0*log(0.5, base = 2), -9*log(0.5, base = 2), -9*log(0.5, base = 2), -9*log(0.5, base = 2), -9*log(0.5, base = 2), 
-    -9*log(0.5, base = 2), -9*log(0.5, base = 2), -9*log(0.5, base = 2), -9*log(0.5, base = 2), -0*log(0.5, base = 2), -7*log(0.5, base = 2), -7*log(0.5, base = 2), -7*log(0.5, base = 2), 
-    -9*log(0.5, base = 2), -9*log(0.5, base = 2), -9*log(0.5, base = 2), -9*log(0.5, base = 2), -7*log(0.5, base = 2), -0*log(0.5, base = 2), -3*log(0.5, base = 2), -3*log(0.5, base = 2), 
-    -9*log(0.5, base = 2), -9*log(0.5, base = 2), -9*log(0.5, base = 2), -9*log(0.5, base = 2), -7*log(0.5, base = 2), -3*log(0.5, base = 2), -0*log(0.5, base = 2), -1*log(0.5, base = 2), 
-    -9*log(0.5, base = 2), -9*log(0.5, base = 2), -9*log(0.5, base = 2), -9*log(0.5, base = 2), -7*log(0.5, base = 2), -3*log(0.5, base = 2), -1*log(0.5, base = 2), -0*log(0.5, base = 2)), 
+  c(0, 1/7, 1/7, 1/7, 1/9, 1/9, 1/9, 1/9, 
+    1/7, 0, 1/3, 1/3, 1/9, 1/9, 1/9, 1/9, 
+    1/7, 1/3, 0, 1/1, 1/9, 1/9, 1/9, 1/9, 
+    1/7, 1/3, 1/1, 0, 1/9, 1/9, 1/9, 1/9, 
+    1/9, 1/9, 1/9, 1/9, 0, 1/7, 1/7, 1/7,
+    1/9, 1/9, 1/9, 1/9, 1/7, 0, 1/3, 1/3,
+    1/9, 1/9, 1/9, 1/9, 1/7, 1/3, 0, 1/1,
+    1/9, 1/9, 1/9, 1/9, 1/7, 1/3, 1/1, 0), 
    
   # No of rows
   nrow = 8,   
@@ -428,35 +428,18 @@ colnames(junction_dist) = c("a", "b", "c", "d", "e", "f", "g", "h")
   
 junction_dist
 
-#should I make every element 1/itself?
 #need loop over i and j and need to do this for each colony/treatment
 ```
 
 ```{r}
 #practice with 398 control
 
-props398 <- ants_wide %>% 
+#making proportion vectors 
+p398c <- ants_wide %>% 
   filter(colony == "PW398 (rascal)", type == "control") %>% 
-  select(nest, ants_nest_prop)
+  pull(ants_nest_prop)
 
-prob_moving_sum = 0
-
-for(i in 1:8) {
-  for (j in 1:8) {
-    if(j!=i){
-    pi <- props398 %>% filter(nest == nests[i])  %>% select(ants_nest_prop)
-    pj <- props398 %>% filter(nest == nests[j])  %>% select(ants_nest_prop)
-    dij = junction_dist[i,j]
-    prob_moving_sum = prob_moving_sum + ((pi*pj)/dij)
-    }
-  }
-}
-prob_moving_sum
-
-#normalize the sum
-
-weighted_efficiency = (1/(n*(n-1))) * prob_moving_sum
-
+weighted_efficiency <- (1/(n*(n-1)))* (t(p398c) %*% junction_dist %*% p398c)
 weighted_efficiency
 ```
 
